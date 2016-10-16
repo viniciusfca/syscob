@@ -15,15 +15,16 @@
 
                 <div class=" panel panel-primary" style="margin-top: 7%">
                     <div class="panel-heading" style="text-align: center;font-size: 120%; font-weight: bold; 
-                         text-align: left">Cadastro a Receber</div>
+                         text-align: left">Contas a Receber</div>
                 </div>
 
 
                 <div class="row" style="text-align: left; margin-top: 2%">
                     <div class="col-lg-3">
-                        <p:inputText placeholder="Nosso Número" style="width: 100%"/>
+                        <p:outputLabel value="Nosso Número:"/>
+                        <p:inputNumber placeholder="Ex: 12345678" style="width: 100%"/>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3" style="width: 0%; margin-top: 2.6%;">
                         <p:commandButton  value="Pesquisar" styleClass="btnMenu" />
                     </div>
                 </div>
@@ -34,7 +35,7 @@
                 <div style="margin-top: 1%">
                     <p:dataTable style="width: 100%;font-weight: bold; text-align: center" value="#{agendaMB.dividas.get(0)}" var="divida" emptyMessage="Não existe divídas para serem cobradas.">
 
-                        <p:column style="color: black; font-weight: bold" headerText="Valor da Divída" width="16%" >
+                        <p:column style="color: black; font-weight: bold" headerText="Valor da Dívida" width="16%" >
                             <h:outputText value="#{divida.valor}" styleClass="fontInput">
                                 <f:convertNumber type="currency" />
                             </h:outputText>

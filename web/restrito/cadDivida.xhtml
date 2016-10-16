@@ -14,7 +14,7 @@
 
             <div class=" panel panel-primary" style="margin-top: 7%">
                 <div class="panel-heading" style="text-align: center;font-size: 120%; font-weight: bold; 
-                     text-align: left">Cadastro de Divída</div>
+                     text-align: left">Cadastro de Dívida</div>
             </div>
             
             
@@ -70,9 +70,9 @@
                     <div class="row" style="text-align: left">
                         <div class="col-lg-6">
 
-                            <p:commandButton  value="Novo" styleClass="btnMenu" action="#{clienteMB.inserirCliente()}" />
+                            <p:commandButton icon="fa fa-plus" value="Novo" styleClass="btnMenu" action="#{clienteMB.inserirCliente()}" />
                             <p:commandButton disabled="true" styleClass="btnMenu" icon="ui-icon-disk" type="button" value="Salvar" style=" margin-left: 1%"/>
-                            <p:commandButton  onclick="PF('dtCliente').show();" icon="ui-icon-search" styleClass="btnMenu" type="button" value="Pesquisar" style="margin-left: 1%"/>
+                            <p:commandButton onclick="PF('dtCliente').show();" icon="ui-icon-search" styleClass="btnMenu" type="button" value="Pesquisar" style="margin-left: 1%"/>
                         </div>
                     </div>
                     <br/> 
@@ -82,38 +82,42 @@
                     </div>
 
 
-                    <div class="row" style="text-align: left;margin-top: 1%">
-                        <div class="col-lg-2">
-                            <h:outputLabel value="CPF:" style="display: block" styleClass="fontInput"/>
-                            <p:inputMask placeholder="Ex: 999.999.999-99" value="#{clienteMB.cliente.cpf}" mask="999.999.999-99" styleClass="fontInput" style="width: 100%"/>
+                        <div class="row" style="text-align: left">
+                            <div class="col-lg-3" >
+                                <h:outputLabel value="Nome:" style="display: block" styleClass="fontInput"/>
+                                <p:inputText value="#{clienteMB.cliente.nome}" styleClass="fontInput" style="width: 205px"/>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <h:outputLabel value="CPF:" style="display: block" styleClass="fontInput"/>
+                                <p:inputMask placeholder="Ex: 999.999.999-99" value="#{clienteMB.cliente.cpf}" mask="999.999.999-99" styleClass="fontInput" style="width: 100%"/>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <h:outputLabel value="RG:" style="display: block" styleClass="fontInput"/>
+                                <p:inputNumber placeholder="Ex: 000000000" value="#{clienteMB.cliente.rg}" styleClass="fontInput" style="width: 100%"/>
+                            </div>
+
                         </div>
 
-                        <div class="col-lg-4">
-                            <h:outputLabel value="Nome:" style="display: block" styleClass="fontInput"/>
-                            <p:inputText value="#{clienteMB.cliente.nome}" styleClass="fontInput" style="width: 100%"/>
+                        <div class="row" style="margin-top: 1%">
+
+                            <div class="col-lg-3" >
+                                <h:outputLabel value="Data Nascimento:" style="display: block;" styleClass="fontInput"/>
+                                <p:calendar  effect="slide" placeholder="Ex: 01/01/1990" value="#{clienteMB.cliente.datanasc}" locale="pt" pattern="dd/MM/yyyy">
+                                </p:calendar>
+                            </div>
+
+                            <div class="col-lg-3" >
+                                <h:outputLabel value="Sexo:" style="display: block;  " styleClass="fontInput"/>
+                                <p:selectOneMenu effect="slide" value="M">
+                                    <f:selectItem itemLabel="Masculino" itemValue="M"/>
+                                    <f:selectItem itemLabel="Feminino" itemValue="F"/>
+                                </p:selectOneMenu>
+                            </div>
+
                         </div>
 
-                        <div class="col-lg-2">
-                            <h:outputLabel value="RG:" style="display: block" styleClass="fontInput"/>
-                            <p:inputText placeholder="Ex: 000000000" value="#{clienteMB.cliente.rg}" styleClass="fontInput" style="width: 100%"/>
-                        </div>
-
-                        <div class="col-lg-2">
-                            <h:outputLabel value="Data Nascimento:" style="display: block"/>
-                            <p:calendar placeholder="Ex: 01/01/1990" effect="slide" value="#{clienteMB.cliente.datanasc}" locale="pt" pattern="dd/MM/yyyy">
-                            </p:calendar>
-                        </div>
-
-                        <div class="col-lg-2">
-                            <h:outputLabel value="Sexo:" style="display: block; width: 50%"/>
-                            <p:selectOneMenu effect="slide">
-                                <f:selectItem itemLabel="Masculino"/>
-                                <f:selectItem itemLabel="Feminino"/>
-                            </p:selectOneMenu>
-                        </div>
-
-
-                    </div>
 
                     <div class="panel panel-default" style="margin-top: 2%">
                         <div class="panel-heading" style="font-weight: bold">Dados de Endereço</div>
@@ -123,41 +127,72 @@
                     <div class="row" style="text-align: left; margin-top: 1%">
 
                         <div class="col-lg-4">
-                            <h:outputLabel value="Endereço:" style="display: block" styleClass="fontInput"/>
+                            <h:outputLabel value="Endereço:" style="display: block; " styleClass="fontInput"/>
                             <p:inputText placeholder="Ex: Avenida Brasil" value="#{clienteMB.cliente.endereco}" style="width: 100%" styleClass="fontInput"/>
                         </div>
 
                         <div class="col-lg-4">
-                            <h:outputLabel value="Cidade:" style="display: block" styleClass="fontInput"/>
-                            <p:inputText placeholder="Ex: São Paulo" value="#{clienteMB.cliente.cidade}" style="width: 100%" styleClass="fontInput"/>
+                            <h:outputLabel value="Número:" style="display: block" styleClass="fontInput"/>
+                            <p:inputNumber placeholder="Ex: 8052" value="#{clienteMB.cliente.numero}" style="width: 100%;" styleClass="fontInput"/>
                         </div>
-
+                        
                         <div class="col-lg-4">
                             <h:outputLabel value="Bairro:" style="display: block" styleClass="fontInput"/>
                             <p:inputText placeholder="Ex: Jardim Bueno" value="#{clienteMB.cliente.uf}" style="width: 100%" styleClass="fontInput"/>
                         </div>
                     </div>
 
-                    <div class="row" style="text-align: left; ">
-                        <div class="col-lg-4">
-                            <h:outputLabel value="Numero:" style="display: block" styleClass="fontInput"/>
-                            <p:inputText placeholder="Ex: 8052" value="#{clienteMB.cliente.numero}" style="width: 100%" styleClass="fontInput"/>
-                        </div>
+                    <div class="row" style="text-align: left;margin-top: 1% ">
 
                         <div class="col-lg-4">
                             <h:outputLabel value="Complemento:" style="display: block" styleClass="fontInput"/>
                             <p:inputText placeholder="Ex: Apartamento 21" value="#{clienteMB.cliente.numero}" style="width: 100%" styleClass="fontInput"/>
                         </div>
-
+                        
                         <div class="col-lg-4">
-                            <h:outputLabel value="Estado:" style="display: block" styleClass="fontInput"/>
-                            <p:inputText placeholder="Ex: SP" value="#{clienteMB.cliente.uf}" style="width: 100%" styleClass="fontInput"/>
+                            <h:outputLabel value="Cidade:" style="display: block" styleClass="fontInput"/>
+                            <p:inputText placeholder="Ex: São Paulo" value="#{clienteMB.cliente.cidade}" style="width: 100%" styleClass="fontInput"/>
                         </div>
 
+                        <!-- <div class="col-lg-4">
+                            <h:outputLabel value="Estado:" style="display: block" styleClass="fontInput"/>
+                            <p:inputText placeholder="Ex: SP" value="#{clienteMB.cliente.uf}" style="width: 100%" styleClass="fontInput"/>
+                        </div> -->
+                        
+                            <div class="col-lg-4" >
+                                <h:outputLabel value="Estado:" style="display: block;" styleClass="fontInput"/>
+                                <p:selectOneMenu effect="slide" value="SP">
+                                    <f:selectItem itemLabel="Acre" itemValue="AC"/>
+                                    <f:selectItem itemLabel="Alagoas" itemValue="AL"/>
+                                    <f:selectItem itemLabel="Amapá" itemValue="AP"/>
+                                    <f:selectItem itemLabel="Amazonas" itemValue="AM"/>
+                                    <f:selectItem itemLabel="Bahia" itemValue="BA"/>
+                                    <f:selectItem itemLabel="Ceará" itemValue="CE"/>
+                                    <f:selectItem itemLabel="Distrito Federal" itemValue="DF"/>
+                                    <f:selectItem itemLabel="Espírito Santo" itemValue="ES"/>
+                                    <f:selectItem itemLabel="Goiás" itemValue="GO"/>
+                                    <f:selectItem itemLabel="Maranhão" itemValue="MA"/>
+                                    <f:selectItem itemLabel="Mato Grosso" itemValue="MT"/>
+                                    <f:selectItem itemLabel="Mato Grosso do Sul" itemValue="MS"/>
+                                    <f:selectItem itemLabel="Minas Gerais" itemValue="MG"/>
+                                    <f:selectItem itemLabel="Pará" itemValue="PA"/>
+                                    <f:selectItem itemLabel="Paraíba" itemValue="PB"/>
+                                    <f:selectItem itemLabel="Paraná" itemValue="PR"/>
+                                    <f:selectItem itemLabel="Pernambuco" itemValue="PE"/>
+                                    <f:selectItem itemLabel="Piauí" itemValue="PI"/>
+                                    <f:selectItem itemLabel="Rio de Janeiro" itemValue="RJ"/>
+                                    <f:selectItem itemLabel="Rio Grande do Norte" itemValue="RN"/>
+                                    <f:selectItem itemLabel="Rio Grande do Sul" itemValue="RS"/>
+                                    <f:selectItem itemLabel="Rondônia" itemValue="RO"/>
+                                    <f:selectItem itemLabel="Roraima" itemValue="RR"/>
+                                    <f:selectItem itemLabel="Santa Catarina" itemValue="SC"/>
+                                    <f:selectItem itemLabel="São Paulo" itemValue="SP"/>
+                                    <f:selectItem itemLabel="Sergipe" itemValue="SE"/>
+                                    <f:selectItem itemLabel="Tocantins" itemValue="TO"/>
+                                </p:selectOneMenu>
+                            </div>
+                        
                     </div>
-
-
-
 
                     <div class="panel panel-default" style="margin-top: 2%">
                         <div class="panel-heading" style="font-weight: bold">Dados de Contato</div>
@@ -186,13 +221,13 @@
 
 
                     <div class="panel panel-default" style="margin-top: 2%">
-                        <div class="panel-heading" style="font-weight: bold">Dados da Divída</div>
+                        <div class="panel-heading" style="font-weight: bold">Dados da Dívída</div>
                     </div>
 
                     <div class="row" style="text-align: left">
                         <div class="col-lg-6">
 
-                            <p:commandButton styleClass="btnMenu" value="Novo" action="#{clienteMB.inserirCliente()}" />
+                            <p:commandButton styleClass="btnMenu" icon="fa fa-plus" value="Novo" action="#{clienteMB.inserirCliente()}" />
                             <p:commandButton styleClass="btnMenu" disabled="true" icon="ui-icon-disk" type="button" value="Salvar" style=" margin-left: 1%"/>
 
                         </div>
