@@ -10,12 +10,11 @@
 
     <ui:define name="content">
 
-
         <center>
             <h:form style="width: 920px;text-align: left ">
 
                 <p:dialog  hideEffect="blind" showEffect="blind" header="PESQUISAR FUNCIONÁRIO" id="dtCliente" appendTo="@(body)"  widgetVar="dtCliente" modal="true"  draggable="false"  width="80%">
-
+ 
                     <div class="row">
                         <div class="col-lg-4">
                             <p:outputLabel value="Filtro:"/>
@@ -35,7 +34,7 @@
 
                     </div>
 
-                    <p:dataTable style="width: 100%;font-weight: lighter; margin-top: 1%"  value="#{agendaMB.dividas}" var="divida" emptyMessage="">
+                    <p:dataTable style="width: 100%;font-weight: lighter;margin-top: 1%"  value="#{agendaMB.dividas}" var="divida" emptyMessage="">
                         <!--<p:column headerText="id" width="5%;" style="font-weight: bold;color: black" styleClass="textColumn" >
                             <h:outputText value="#{divida.id}" styleClass="fontInput"/>
                         </p:column>-->
@@ -57,30 +56,23 @@
 
                 </p:dialog>
 
-                <div class=" panel panel-primary" style="margin-top: 7%">
-                    <div class="panel-heading" style="text-align: center;font-size: 120%; font-weight: bold; 
-                         text-align: left">Cadastro de Funcionário</div>
-                </div>
-
-
-
-
-                <div class="panel panel-default" style="margin-top: 2%">
-                    <div class="panel-heading" style="font-weight: bold">Dados Pessoais</div>
+                <div class="panel panel-primary" style="margin-top: 7%">
+                    <div class="panel-heading" style="font-weight: bold">Cadastro de Funcionário</div>
                     <div class="panel-body">
-
-
 
                         <div class="row" style="text-align: left">
                             <div class="col-lg-6">
 
-                                <p:commandButton icon="fa fa-plus" value="Novo" action="#{clienteMB.inserirCliente()}"  styleClass="btnMenu"/>
-                                <p:commandButton disabled="true" icon="ui-icon-disk" type="button" value="Salvar" style="margin-left: 1%" styleClass="btnMenu"/>
+                                <p:commandButton icon="ui-icon-disk" value="Incluir" action="#{clienteMB.inserirCliente()}"  styleClass="btnMenu"/>
+                                <!--<p:commandButton disabled="true" icon="ui-icon-disk" type="button" value="Salvar" style="margin-left: 1%" styleClass="btnMenu"/>-->
                                 <p:commandButton icon="ui-icon-search" type="button" value="Pesquisar" style="margin-left: 1%" styleClass="btnMenu" onclick="PF('dtCliente').show();"/>
                             </div>
                         </div>
-                        <br/> 
-
+                        
+                        <div class="panel panel-default" style="margin-top: 2%">
+                            <div class="panel-heading" style="font-weight: bold">Dados Pessoais</div>
+                        </div>
+                        
                         <div class="row" style="text-align: left">
                             <div class="col-lg-3" >
                                 <h:outputLabel value="Nome:" style="display: block" styleClass="fontInput"/>
@@ -113,11 +105,11 @@
                                     <f:selectItem itemLabel="Masculino" itemValue="M"/>
                                     <f:selectItem itemLabel="Feminino" itemValue="F"/>
                                 </p:selectOneMenu>
-
                             </div>
 
-
                         </div>
+
+
 
                         <div class="panel panel-default" style="margin-top: 2%">
                             <div class="panel-heading" style="font-weight: bold">Dados de Endereço</div>
@@ -149,15 +141,15 @@
                                 <p:inputText placeholder="Ex: Apartamento 21" value="#{clienteMB.cliente.numero}" style="width: 100%" styleClass="fontInput"/>
                             </div>
 
-                            <!-- <div class="col-lg-4">
-                                <h:outputLabel value="Estado:" style="display: block" styleClass="fontInput"/>
-                                <p:inputText placeholder="Ex: SP" value="#{clienteMB.cliente.uf}" style="width: 100%" styleClass="fontInput"/>
-                            </div> -->
-
                             <div class="col-lg-4">
                                 <h:outputLabel value="Cidade:" style="display: block" styleClass="fontInput"/>
                                 <p:inputText placeholder="Ex: São Paulo" value="#{clienteMB.cliente.cidade}" style="width: 100%" styleClass="fontInput"/>
                             </div>
+
+                            <!-- <div class="col-lg-4">
+                                <h:outputLabel value="Estado:" style="display: block" styleClass="fontInput"/>
+                                <p:inputText placeholder="Ex: SP" value="#{clienteMB.cliente.uf}" style="width: 100%" styleClass="fontInput"/>
+                            </div> -->
 
                             <div class="col-lg-4" >
                                 <h:outputLabel value="Estado:" style="display: block;" styleClass="fontInput"/>
@@ -196,7 +188,6 @@
 
 
 
-
                         <div class="panel panel-default" style="margin-top: 2%">
                             <div class="panel-heading" style="font-weight: bold">Dados de Acesso</div>
                         </div>
@@ -223,7 +214,6 @@
                                 <p:inputText placeholder="Ex: exemplo@exemplo.com.br" style="width: 100%" styleClass="fontInput"/>
                             </div>
 
-
                         </div>
 
                         <div class="row" style="text-align: left; margin-top: 1%">
@@ -246,7 +236,6 @@
 
                     </div>
                 </div>
-
 
             </h:form>
         </center>

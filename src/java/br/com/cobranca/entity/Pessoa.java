@@ -7,39 +7,45 @@ package br.com.cobranca.entity;
 
 import java.util.Date;
 
-/**
- *
- * @author Vinicius
- */
-public class Cliente {
+public class Pessoa {
     
-    private int id;
+    private Integer id;
+    private String tipo;
     
     private String nome;
+    private String sexo;
     private String cpf;
     private String rg;
-    private String sexo;
+    
+    private String telefone;
+    private String celular;
+    private String email;
+    
     private String endereco;
-    private String numero;
+    private Long numero;
     private String bairro;
     private String complemento;
     private String uf;
     private String cidade;
-    private String telefone;
-    private String celular;
-    private String email;
-    private String usuario;
+    private String username;
     private String senha;
     
-    private Date dataNascimento;
-    private Date dataCadastro;
+    private Date datanascimento;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public String getNome() {
@@ -48,6 +54,14 @@ public class Cliente {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
     }
 
     public String getCpf() {
@@ -66,12 +80,28 @@ public class Cliente {
         this.rg = rg;
     }
 
-    public String getSexo() {
-        return sexo;
+    public String getTelefone() {
+        return telefone;
     }
 
-    public void setSexo(String sexo) {
-        this.sexo = sexo;
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getCelular() {
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getEndereco() {
@@ -82,11 +112,11 @@ public class Cliente {
         this.endereco = endereco;
     }
 
-    public String getNumero() {
+    public Long getNumero() {
         return numero;
     }
 
-    public void setNumero(String numero) {
+    public void setNumero(Long numero) {
         this.numero = numero;
     }
 
@@ -122,36 +152,12 @@ public class Cliente {
         this.cidade = cidade;
     }
 
-    public String getTelefone() {
-        return telefone;
+    public String getUsername() {
+        return username;
     }
 
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public String getCelular() {
-        return celular;
-    }
-
-    public void setCelular(String celular) {
-        this.celular = celular;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getSenha() {
@@ -162,23 +168,12 @@ public class Cliente {
         this.senha = senha;
     }
 
-    public Date getDataNascimento() {
-        return dataNascimento;
+    public Date getDatanascimento() {
+        return datanascimento;
     }
 
-    public void setDataNascimento(Date dataNascimento) {
-        this.dataNascimento = dataNascimento;
+    public void setDatanascimento(Date datanascimento) {
+        this.datanascimento = datanascimento;
     }
 
-    public Date getDataCadastro() {
-        return dataCadastro;
-    }
-
-    public void setDataCadastro(Date dataCadastro) {
-        this.dataCadastro = dataCadastro;
-    }
-    
-    
-    
-    
 }

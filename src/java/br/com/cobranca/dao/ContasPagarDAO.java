@@ -5,10 +5,30 @@
  */
 package br.com.cobranca.dao;
 
+import br.com.cobranca.entity.Pessoa;
+import br.com.cobranca.util.Conexao;
+import java.sql.PreparedStatement;
+
 /**
  *
  * @author Vinicius
  */
 public class ContasPagarDAO {
     
+    public Pessoa buscarCliente(int id){
+        Pessoa cliente = new Pessoa();
+        Conexao conexao  = new Conexao();
+        
+        PreparedStatement ps;
+        
+        try{
+            
+        }catch(Exception e){
+            
+        }finally{
+            
+        }
+        
+        return cliente;
+    }
 }

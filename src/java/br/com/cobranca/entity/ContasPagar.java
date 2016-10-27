@@ -13,18 +13,18 @@ import java.util.Date;
  */
 public class ContasPagar {
     
-    private Cliente cliente;
+    private Pessoa cliente;
     private Divida divida;
     
     private Date dataPagamento;
     
     private String status;
 
-    public Cliente getCliente() {
+    public Pessoa getCliente() {
         return cliente;
     }
 
-    public void setCliente(Cliente cliente) {
+    public void setCliente(Pessoa cliente) {
         this.cliente = cliente;
     }
 

@@ -14,7 +14,7 @@ import java.util.Date;
 public class Divida {
     
     private Devedor devedor;
-    private Cliente cliente;
+    private Pessoa cliente;
     
     private double valorDivida;
     
@@ -31,11 +31,11 @@ public class Divida {
         this.devedor = devedor;
     }
 
-    public Cliente getCliente() {
+    public Pessoa getCliente() {
         return cliente;
     }
 
-    public void setCliente(Cliente cliente) {
+    public void setCliente(Pessoa cliente) {
         this.cliente = cliente;
     }
 
