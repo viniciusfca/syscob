@@ -28,8 +28,6 @@ public class Devedor {
     private String telefone;
     private String celular;
     private String email;
-    private String usuario;
-    private String senha;
     
     private Date dataNascimento;
     private Date dataCadastro;
@@ -144,22 +142,6 @@ public class Devedor {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
     }
 
     public Date getDataNascimento() {
