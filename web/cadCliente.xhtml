@@ -35,9 +35,7 @@
                     </div>
 
                     <p:dataTable style="width: 100%;font-weight: lighter;margin-top: 1%"  value="#{ClienteMB.pessoas}" var="pessoaDT" emptyMessage="">
-                        <!--<p:column headerText="id" width="5%;" style="font-weight: bold;color: black" styleClass="textColumn" >
-                            <h:outputText value="#{divida.id}" styleClass="fontInput"/>
-                        </p:column>-->
+                        
                         <p:column headerText="Cliente" style="font-weight: bold;color: black" width="20%" styleClass="textColumn">
                             <h:outputText value="#{pessoaDT.nome}" styleClass="fontInput"/>
                         </p:column>

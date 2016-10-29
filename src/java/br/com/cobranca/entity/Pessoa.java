@@ -9,6 +9,7 @@ import java.util.Date;
 
 public class Pessoa {
     
+    
     private Integer id;
     private String tipo;
     
@@ -33,6 +34,7 @@ public class Pessoa {
     private Date datanascimento;
 
     public Integer getId() {
+        
         return id;
     }
 

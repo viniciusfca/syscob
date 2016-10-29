@@ -5,12 +5,12 @@
  */
 package br.com.cobranca.util;
 
-import br.com.cobranca.entity.Pessoa;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 
@@ -25,91 +25,288 @@ public class Util {
         return "";
     }
 
-    /*
-    public static <T> boolean alterarRegistro(T obj, Connection con, String strWhere) throws Exception {
+    public static <T> boolean alterarRegistro(T objAlterado, Class<T> classe, Connection con, String strWhere) throws Exception, SQLException {
 
         if(strWhere == null || strWhere.trim().equals("")){
             return false;
         }
         
-        String nomeTabela = obj.getClass().getSimpleName();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         
-        String strSql = "SELECT * FROM " + nomeTabela + " " + strWhere;
-        PreparedStatement ps = con.prepareStatement(strSql);
+        T objOriginal = classe.newInstance();
+                      
+        try{
         
-            ResultSet rs = ps.executeQuery();
-            T objAuxiliar = T.getClass().newInstance();
+            // Recuperar objeto original no banco de dados
             
+            String nomeTabela = objAlterado.getClass().getSimpleName();
+            String strSql = "SELECT * FROM " + nomeTabela + " " + strWhere;
+
+            ps = con.prepareStatement(strSql);
+            rs = ps.executeQuery();
+
             if (rs.next()) {
-                objAuxiliar = atribuirValores((getClass().getGenericSuperclass()).getActualTypeArguments()[0] , rs);
+                objOriginal = Util.atribuirValores(classe, rs);
             }
-        
+
             else{
                 return false;
             }
 
-        String strSql = "UPDATE " + nomeTabela.toUpperCase() + " ";
-/*
-        for (Field field : obj.getClass().getDeclaredFields()) {
-            field.setAccessible(true);
+            rs.close();
+            ps.close();
+            
+            // Comparar valores dos dois objetos
+            
+            int i = 1;
+            strSql = "UPDATE " + nomeTabela + " SET ";
+                        
+            boolean efetuarAlteracao;
+            boolean usarVirgula = false;
+            
+            for (Field field : objAlterado.getClass().getDeclaredFields()) {
+                
+                if(usarVirgula){
+                    strSql = strSql + ", ";
+                    usarVirgula = false;
+                }
+                
+                efetuarAlteracao = false;
+                
+                String nomeColuna = field.getName();
+                String tipoColuna = field.getType().getSimpleName();
 
-            if (usarVirgula) {
-                strSql = strSql + ", ";
-            }
-
-            strSql = strSql + field.getName();
-
-            if (!usarVirgula) {
-                usarVirgula = true;
-            }
-        }
-
-        strSql = strSql + ") VALUES (";
-
-        usarVirgula = false;
-
-        for (Field field : obj.getClass().getDeclaredFields()) {
-            field.setAccessible(true);
-
-            if (usarVirgula) {
-                strSql = strSql + ", ";
-            }
-
-            strSql = strSql + "?";
-
-            if (!usarVirgula) {
-                usarVirgula = true;
-            }
-        }
-
-        strSql = strSql + ")";
-
-        
-        strSql = strSql + strWhere;
-        PreparedStatement ps = con.prepareStatement(strSql);
-
-        try {
-
-            int qtdLinhasAfetadas = ps.executeUpdate();
-
-            if (qtdLinhasAfetadas > 0) {
-
-                try (ResultSet rs = ps.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        id = rs.getInt(1);
-                    }
+                if (tipoColuna.toUpperCase().contains("INT")) {
+                    tipoColuna = "Int";
+                } else {
+                    tipoColuna = StringPrimeiraLetraMaiuscula(tipoColuna);
                 }
 
+                // obj . get + nome do campo
+                Method met = classe.getMethod("get" + StringPrimeiraLetraMaiuscula(field.getName()));
+
+                if (tipoColuna.equals("Int")) {
+
+                    Integer valorOriginal = (Integer) met.invoke(objOriginal);
+                    Integer valorAlterado = (Integer) met.invoke(objAlterado);
+
+                    if(!valorOriginal.equals(valorAlterado)){
+                        efetuarAlteracao = true;
+                    }
+                    
+                } else if (tipoColuna.equals("String")) {
+                    
+                    String valorOriginal = (String) met.invoke(objOriginal);
+                    String valorAlterado = (String) met.invoke(objAlterado);
+
+                    if(!valorOriginal.equals(valorAlterado)){
+                        efetuarAlteracao = true;
+                    }
+                    
+                } else if (tipoColuna.equals("Double")) {
+
+                    Double valorOriginal = (Double) met.invoke(objOriginal);
+                    Double valorAlterado = (Double) met.invoke(objAlterado);
+
+                    if(!valorOriginal.equals(valorAlterado)){
+                        efetuarAlteracao = true;
+                    }
+                    
+                } else if (tipoColuna.equals("Float")) {
+
+                    Float valorOriginal = (Float) met.invoke(objOriginal);
+                    Float valorAlterado = (Float) met.invoke(objAlterado);
+
+                    if(!valorOriginal.equals(valorAlterado)){
+                        efetuarAlteracao = true;
+                    }
+
+                } else if (tipoColuna.equals("Long")) {
+
+                    Long valorOriginal = (Long) met.invoke(objOriginal);
+                    Long valorAlterado = (Long) met.invoke(objAlterado);
+
+                    if(!valorOriginal.equals(valorAlterado)){
+                        efetuarAlteracao = true;
+                    }
+
+                } else if (tipoColuna.equals("Boolean")) {
+                    
+                    Boolean valorOriginal = (Boolean) met.invoke(objOriginal);
+                    Boolean valorAlterado = (Boolean) met.invoke(objAlterado);
+
+                    if(!valorOriginal.equals(valorAlterado)){
+                        efetuarAlteracao = true;
+                    }
+
+                } else if (tipoColuna.equals("Date")) {
+                    
+                    Date valorOriginal = (Date) met.invoke(objOriginal);
+                    Date valorAlterado = (Date) met.invoke(objAlterado);
+
+                    if(!valorOriginal.equals(valorAlterado)){
+                        efetuarAlteracao = true;
+                    }
+
+                } else {
+                    return false;
+                }
+
+                if(efetuarAlteracao){
+                    strSql = strSql + nomeColuna + " = ? ";
+                    usarVirgula = true;
+                }
+                
+                i++;
             }
-        } catch (Exception ex) {
+            
+            //Se não houve alteração, retorna falso
+            if(!strSql.contains("?")){
+                return false;
+            }
+            
+            strSql = strSql + strWhere;
+            ps = con.prepareStatement(strSql);
+            
+            // ps.set?()
+            
+            for (Field field : objAlterado.getClass().getDeclaredFields()) {
+                
+                String nomeColuna = field.getName();
+                String tipoColuna = field.getType().getSimpleName();
+
+                if (tipoColuna.toUpperCase().contains("INT")) {
+                    tipoColuna = "Int";
+                } else {
+                    tipoColuna = StringPrimeiraLetraMaiuscula(tipoColuna);
+                }
+
+                // obj . get + nome do campo
+                Method met = classe.getMethod("get" + StringPrimeiraLetraMaiuscula(field.getName()));
+
+                if (tipoColuna.equals("Int")) {
+
+                    Integer valorOriginal = (Integer) met.invoke(objOriginal);
+                    Integer valorAlterado = (Integer) met.invoke(objAlterado);
+
+                    if(!valorOriginal.equals(valorAlterado)){
+                        if (valorAlterado == null) {
+                            ps.setString(i, null);
+                        } else {
+                            ps.setInt(i, valorAlterado);
+                        }
+                    }
+                    
+                } else if (tipoColuna.equals("String")) {
+                    String valorOriginal = (String) met.invoke(objOriginal);
+                    String valorAlterado = (String) met.invoke(objAlterado);
+
+                    if(!valorOriginal.equals(valorAlterado)){
+                        ps.setString(i, valorAlterado);
+                    }
+                    
+                } else if (tipoColuna.equals("Double")) {
+
+                    Double valorOriginal = (Double) met.invoke(objOriginal);
+                    Double valorAlterado = (Double) met.invoke(objAlterado);
+
+                    if(!valorOriginal.equals(valorAlterado)){
+                        if (valorAlterado == null) {
+                            ps.setString(i, null);
+                        } else {
+                            ps.setDouble(i, valorAlterado);
+                        }
+                    }
+
+                } else if (tipoColuna.equals("Float")) {
+
+                    Float valorOriginal = (Float) met.invoke(objOriginal);
+                    Float valorAlterado = (Float) met.invoke(objAlterado);
+
+                    if(!valorOriginal.equals(valorAlterado)){
+                        if (valorAlterado == null) {
+                            ps.setString(i, null);
+                        } else {
+                            ps.setFloat(i, valorAlterado);
+                        }
+                    }
+
+                } else if (tipoColuna.equals("Long")) {
+
+                    Long valorOriginal = (Long) met.invoke(objOriginal);
+                    Long valorAlterado = (Long) met.invoke(objAlterado);
+
+                    if(!valorOriginal.equals(valorAlterado)){
+                        if (valorAlterado == null) {
+                            ps.setString(i, null);
+                        } else {
+                            ps.setLong(i, valorAlterado);
+                        }
+                    }
+
+                } else if (tipoColuna.equals("Boolean")) {
+                    
+                    Boolean valorOriginal = (Boolean) met.invoke(objOriginal);
+                    Boolean valorAlterado = (Boolean) met.invoke(objAlterado);
+
+                    if(!valorOriginal.equals(valorAlterado)){
+                        if (valorAlterado == null) {
+                            ps.setString(i, null);
+                        } else {
+                            ps.setBoolean(i, valorAlterado);
+                        }
+                    }
+
+                } else if (tipoColuna.equals("Date")) {
+                    
+                    Date valorOriginal = (Date) met.invoke(objOriginal);
+                    Date valorAlterado = (Date) met.invoke(objAlterado);
+
+                    if(!valorOriginal.equals(valorAlterado)){
+                        if (valorAlterado == null) {
+                            ps.setString(i, null);
+                        } else {
+                            ps.setDate(i, new java.sql.Date(valorAlterado.getTime()));
+                        }
+                    }
+
+                } else {
+                    return false;
+                }
+
+                i++;
+            }
+            
+            // fim
+            
+            int qtdLinhasAfetadas = ps.executeUpdate();
+
+            if (qtdLinhasAfetadas <= 0) {
+                return false;
+            }
+        }
+            
+        catch(Exception ex){
             throw new Exception(ex.getMessage());
-        } finally {
-            ps.close();
         }
 
-        return id;
+        finally{
+            
+            if(rs != null)
+            {
+                rs.close();
+            }
+
+            if(ps != null)
+            {
+                ps.close();
+            }
+        }
+
+        return true;
+        
     }
-*/
     
     public static <T> int inserirRegistro(T obj, Connection con) throws Exception {
 

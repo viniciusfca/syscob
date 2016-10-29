@@ -19,6 +19,37 @@ import java.util.ArrayList;
  */
 public class PessoaDAO {
 
+    
+    public Pessoa get(int id) throws Exception {
+
+        Conexao conexao = new Conexao();
+        Pessoa p = new Pessoa();
+        
+        try {
+
+            String strSql = "SELECT * FROM PESSOA WHERE ID = ?";
+            PreparedStatement ps = conexao.conectar().prepareStatement(strSql);
+
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                p = Util.atribuirValores(Pessoa.class, rs);
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (Exception ex) {
+            throw new Exception(ex.getMessage());
+        } finally {
+            conexao.desconectar();
+        }
+
+        return p;
+    }
+    
     public ArrayList<Pessoa> get(String tipo) throws Exception {
 
         Conexao conexao = new Conexao();
@@ -59,6 +90,7 @@ public class PessoaDAO {
 
         try {
             
+            //Retirar as máscaras
             pessoa.setCpf(Util.retirarMascara(pessoa.getCpf()));
             pessoa.setCelular(Util.retirarMascara(pessoa.getCelular()));
             pessoa.setTelefone(Util.retirarMascara(pessoa.getTelefone()));
@@ -79,7 +111,7 @@ public class PessoaDAO {
         Conexao conexao = new Conexao();
         try {
 
-            String strSQL = "UPDATE PESSOA SET NOME = ? WHERE ID = ? AND TIPO = ?"; // Falta finalizar
+            String strSQL = "UPDATE PESSOA SET NOME = ?, SET BAIRRO = ? WHERE ID = ? AND TIPO = ?"; // Falta finalizar
             PreparedStatement ps = conexao.conectar().prepareStatement(strSQL);
             
             //Set

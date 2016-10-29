@@ -34,8 +34,6 @@ public class ClienteMB {
         this.pessoas = new ArrayList<Pessoa>();
     }
     
-    
-    
     public void inserirCliente() {
         
         try {
@@ -47,6 +45,8 @@ public class ClienteMB {
         
     }
 
+    //
+    
     public Pessoa getPessoa() {
         return pessoa;
     }
@@ -62,7 +62,5 @@ public class ClienteMB {
     public void setPessoas(ArrayList<Pessoa> pessoas) {
         this.pessoas = pessoas;
     }
-    
-    
     
 }
