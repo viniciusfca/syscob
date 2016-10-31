@@ -16,6 +16,21 @@ import java.util.Date;
 
 public class Util {
 
+    public static boolean ValidarEmail(String email) {
+
+        boolean retorno = false;
+        
+        if (!email.isEmpty()) {
+            
+            if(email.contains("@") && email.contains(".")){
+                retorno = true;
+            }
+            
+        }
+
+        return retorno;
+    }
+    
     public static String StringPrimeiraLetraMaiuscula(String str) {
 
         if (!str.isEmpty()) {

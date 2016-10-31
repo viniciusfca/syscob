@@ -8,23 +8,17 @@ package br.com.cobranca.dao;
 import br.com.cobranca.entity.Pessoa;
 import br.com.cobranca.util.Conexao;
 import br.com.cobranca.util.Util;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-/**
- *
- * @author Vinicius
- */
 public class PessoaDAO {
 
-    
     public Pessoa get(int id) throws Exception {
 
         Conexao conexao = new Conexao();
-        Pessoa p = new Pessoa();
-        
+        Pessoa pessoa = new Pessoa();
+
         try {
 
             String strSql = "SELECT * FROM PESSOA WHERE ID = ?";
@@ -35,7 +29,7 @@ public class PessoaDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                p = Util.atribuirValores(Pessoa.class, rs);
+                pessoa = Util.atribuirValores(Pessoa.class, rs);
             }
 
             rs.close();
@@ -47,20 +41,21 @@ public class PessoaDAO {
             conexao.desconectar();
         }
 
-        return p;
+        return pessoa;
     }
-    
-    public ArrayList<Pessoa> get(String tipo) throws Exception {
+
+    public ArrayList<Pessoa> get(String tipoConsulta, String valorConsulta, String tipoPessoa) throws Exception {
 
         Conexao conexao = new Conexao();
-        ArrayList<Pessoa> pessoas = new ArrayList<Pessoa>();
+        ArrayList<Pessoa> pessoas = new ArrayList<>();
 
         try {
 
-            String strSql = "SELECT * FROM PESSOA WHERE TIPO = ?";
+            String strSql = "SELECT * FROM PESSOA WHERE TIPO = ? AND " + tipoConsulta + " ?";
             PreparedStatement ps = conexao.conectar().prepareStatement(strSql);
 
-            ps.setString(1, tipo);
+            ps.setString(1, tipoPessoa);
+            ps.setString(2, valorConsulta);
 
             ResultSet rs = ps.executeQuery();
 
@@ -89,14 +84,7 @@ public class PessoaDAO {
         int id = 0;
 
         try {
-            
-            //Retirar as máscaras
-            pessoa.setCpf(Util.retirarMascara(pessoa.getCpf()));
-            pessoa.setCelular(Util.retirarMascara(pessoa.getCelular()));
-            pessoa.setTelefone(Util.retirarMascara(pessoa.getTelefone()));
-            
             id = Util.inserirRegistro(pessoa, conexao.conectar());
-
         } catch (Exception ex) {
             throw new Exception(ex.getMessage());
         } finally {
@@ -109,65 +97,44 @@ public class PessoaDAO {
     public boolean put(Pessoa pessoa) throws Exception {
 
         Conexao conexao = new Conexao();
+        boolean retorno = false;
+
         try {
 
-            String strSQL = "UPDATE PESSOA SET NOME = ?, SET BAIRRO = ? WHERE ID = ? AND TIPO = ?"; // Falta finalizar
-            PreparedStatement ps = conexao.conectar().prepareStatement(strSQL);
-            
-            //Set
-            ps.setString(1, pessoa.getNome());
-            
-            //Where
-            ps.setInt(2, pessoa.getId());
-            ps.setString(3, pessoa.getTipo());
-            
-            int qtdLinhasAfetadas = ps.executeUpdate();
+            String strWhere = "WHERE ID = " + pessoa.getId();
+            retorno = Util.alterarRegistro(pessoa, Pessoa.class, conexao.conectar(), strWhere);
 
-            ps.close();
-            
-            if (qtdLinhasAfetadas > 0) {
-                return true;
-            }
-            
-            else{
-                return false;
-            }
-            
         } catch (Exception ex) {
             throw new Exception(ex.getMessage());
         } finally {
             conexao.desconectar();
         }
 
+        return retorno;
     }
-    
+
     public boolean delete(int id) throws Exception {
-    
+
         Conexao conexao = new Conexao();
         try {
 
             String strSQL = "DELETE FROM PESSOA WHERE ID = ?";
             PreparedStatement ps = conexao.conectar().prepareStatement(strSQL);
-            
+
             //Where
             ps.setInt(1, id);
-            
+
             int qtdLinhasAfetadas = ps.executeUpdate();
 
             ps.close();
-            
-            if (qtdLinhasAfetadas > 0) {
-                return true;
-            }
-            
-            else{
-                return false;
-            }
-            
+
+            return (qtdLinhasAfetadas > 0);
+
         } catch (Exception ex) {
             throw new Exception(ex.getMessage());
         } finally {
             conexao.desconectar();
         }
     }
+
 }

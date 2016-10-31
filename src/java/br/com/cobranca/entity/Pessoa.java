@@ -5,10 +5,10 @@
  */
 package br.com.cobranca.entity;
 
+import br.com.cobranca.util.Util;
 import java.util.Date;
 
 public class Pessoa {
-    
     
     private Integer id;
     private String tipo;
@@ -71,7 +71,13 @@ public class Pessoa {
     }
 
     public void setCpf(String cpf) {
-        this.cpf = cpf;
+        
+        if(cpf != null){
+            this.cpf = Util.retirarMascara(cpf);
+        }
+        else{
+            this.cpf = cpf;
+        }
     }
 
     public String getRg() {
@@ -79,7 +85,13 @@ public class Pessoa {
     }
 
     public void setRg(String rg) {
-        this.rg = rg;
+        
+        if(rg != null){
+            this.rg = Util.retirarMascara(rg);
+        }
+        else{
+            this.rg = rg;
+        }
     }
 
     public String getTelefone() {
@@ -87,7 +99,13 @@ public class Pessoa {
     }
 
     public void setTelefone(String telefone) {
-        this.telefone = telefone;
+        
+        if(telefone != null){
+            this.telefone = Util.retirarMascara(telefone);
+        }
+        else{
+            this.telefone = telefone;
+        }
     }
 
     public String getCelular() {
@@ -95,7 +113,13 @@ public class Pessoa {
     }
 
     public void setCelular(String celular) {
-        this.celular = celular;
+        if(celular != null){
+            this.celular = Util.retirarMascara(celular);
+        }
+        
+        else{
+            this.celular = celular;
+        }
     }
 
     public String getEmail() {
