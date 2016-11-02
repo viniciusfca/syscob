@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.com.cobranca.dao;
 
 import br.com.cobranca.entity.Pessoa;
@@ -51,7 +46,7 @@ public class PessoaDAO {
 
         try {
 
-            String strSql = "SELECT * FROM PESSOA WHERE TIPO = ? AND " + tipoConsulta + " ?";
+            String strSql = "SELECT * FROM PESSOA WHERE TIPO = ? AND " + tipoConsulta + " = ?";
             PreparedStatement ps = conexao.conectar().prepareStatement(strSql);
 
             ps.setString(1, tipoPessoa);
@@ -84,7 +79,9 @@ public class PessoaDAO {
         int id = 0;
 
         try {
-            id = Util.inserirRegistro(pessoa, conexao.conectar());
+            if (validarPessoa(pessoa)) {
+                id = Util.inserirRegistro(pessoa, conexao.conectar());
+            }
         } catch (Exception ex) {
             throw new Exception(ex.getMessage());
         } finally {
@@ -101,9 +98,10 @@ public class PessoaDAO {
 
         try {
 
-            String strWhere = "WHERE ID = " + pessoa.getId();
-            retorno = Util.alterarRegistro(pessoa, Pessoa.class, conexao.conectar(), strWhere);
-
+            if (validarPessoa(pessoa)) {
+                String strWhere = "WHERE ID = " + pessoa.getId();
+                retorno = Util.alterarRegistro(pessoa, Pessoa.class, conexao.conectar(), strWhere);
+            }
         } catch (Exception ex) {
             throw new Exception(ex.getMessage());
         } finally {
@@ -135,6 +133,39 @@ public class PessoaDAO {
         } finally {
             conexao.desconectar();
         }
+    }
+
+    private boolean validarPessoa(Pessoa pessoa) throws Exception {
+
+        Conexao conexao = new Conexao();
+        boolean retorno = false;
+        
+        try {
+            String strSQL = "SELECT * FROM PESSOA WHERE TIPO = ? AND (CPF = ? OR USERNAME = ?)";
+            PreparedStatement ps = conexao.conectar().prepareStatement(strSQL);
+
+            //Where
+            ps.setString(1, pessoa.getTipo());
+            ps.setString(2, pessoa.getCpf());
+            ps.setString(3, pessoa.getUsername());
+
+            ResultSet rs = ps.executeQuery();
+
+            if (!rs.next()) {
+                retorno = true;
+            }
+
+            rs.close();
+            ps.close();
+
+            return retorno;
+
+        } catch (Exception ex) {
+            throw new Exception(ex.getMessage());
+        } finally {
+            conexao.desconectar();
+        }
+
     }
 
 }

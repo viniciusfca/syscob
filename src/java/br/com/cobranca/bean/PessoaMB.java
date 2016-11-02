@@ -19,12 +19,14 @@ import javax.faces.bean.ViewScoped;
 @ViewScoped
 public class PessoaMB {
 
+    private String confirmarSenha;
+    private String confirmarEmail;
+
     private String msg;
 
     private String tipoConsulta;
     private String valorConsulta;
 
-    private boolean habilitarBotaoIncluir;
     private boolean habilitarBotaoAlterar;
 
     private final PessoaDAO dao;
@@ -33,12 +35,18 @@ public class PessoaMB {
     public ArrayList<Pessoa> pessoas;
 
     public PessoaMB() {
-        this.pessoa = new Pessoa();
         this.dao = new PessoaDAO();
+
+        limparTela();
+    }
+
+    public void limparTela() {
+
+        pessoa = new Pessoa();
         this.pessoas = new ArrayList<>();
 
-        habilitarBotaoIncluir = true;
         habilitarBotaoAlterar = false;
+
     }
 
     private boolean validarPessoa() {
@@ -51,7 +59,7 @@ public class PessoaMB {
             msg = "CPF inválido!";
         } else if (pessoa.getRg() == null || pessoa.getRg().trim().length() < 9) {
             msg = "RG inválido!";
-        } else if (pessoa.getDatanascimento() == null || pessoa.getDatanascimento().getTime() >= (new Date()).getTime()) {
+        } else if (pessoa.getDataNascimento() == null || pessoa.getDataNascimento().getTime() >= (new Date()).getTime()) {
             msg = "Data de Nascimento inválida!";
         } else if (pessoa.getSexo() == null || (!pessoa.getSexo().trim().equals("F") && !pessoa.getSexo().trim().equals("M"))) {
             msg = "Sexo inválido!";
@@ -71,10 +79,14 @@ public class PessoaMB {
             msg = "Número de celular inválido!";
         } else if (pessoa.getEmail() == null || !Util.ValidarEmail(pessoa.getEmail())) {
             msg = "E-mail inválido!";
+        } else if (confirmarEmail == null || !confirmarEmail.equals(pessoa.getEmail())) {
+            msg = "Confirmação de e-mail inválida!";
         } else if (pessoa.getUsername() == null || pessoa.getUsername().isEmpty()) {
             msg = "Usuário inválido!";
         } else if (pessoa.getSenha() == null || pessoa.getSenha().isEmpty()) {
             msg = "Senha inválida!";
+        } else if (confirmarSenha == null || !confirmarSenha.equals(pessoa.getSenha())) {
+            msg = "Confirmação de senha inválida!";
         }
 
         if (msg.equals("")) {
@@ -85,6 +97,23 @@ public class PessoaMB {
 
     public void atualizarPessoa() {
 
+        try {
+
+            if (validarPessoa()) {
+
+                boolean retorno = dao.put(pessoa);
+
+                if (retorno) {
+                    msg = "Alteração realizada com sucesso!";
+                    limparTela();
+                } else {
+                    msg = "Alteração não efetuada!";
+                }
+            }
+        } catch (Exception ex) {
+            msg = "Erro ao efetuar a alteração: " + ex.getMessage();
+            //Logger.getLogger(PessoaMB.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void inserirPessoa(String tipo) {
@@ -92,12 +121,15 @@ public class PessoaMB {
         try {
 
             if (validarPessoa()) {
-                
+
                 pessoa.setTipo(tipo);
+                pessoa.setDataCadastro(new Date());
+
                 int id = dao.post(pessoa);
 
                 if (id > 0) {
                     msg = "Inclusão realizada com sucesso!";
+                    limparTela();
                 } else {
                     msg = "Inclusão não efetuada!";
                 }
@@ -110,13 +142,19 @@ public class PessoaMB {
     }
 
     public void consultarPessoas(String tipo) {
-        
-        try {
-            pessoas = dao.get(tipoConsulta, valorConsulta, tipo);
-        } catch (Exception ex) {
-            Logger.getLogger(PessoaMB.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
+        if (valorConsulta != null && !valorConsulta.isEmpty()) {
+
+            if (pessoas != null) {
+                pessoas.clear();
+            }
+
+            try {
+                pessoas = dao.get(tipoConsulta, valorConsulta, tipo);
+            } catch (Exception ex) {
+                Logger.getLogger(PessoaMB.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     //
@@ -160,20 +198,28 @@ public class PessoaMB {
         this.valorConsulta = valorConsulta;
     }
 
-    public boolean isHabilitarBotaoIncluir() {
-        return habilitarBotaoIncluir;
-    }
-
-    public void setHabilitarBotaoIncluir(boolean habilitarBotaoIncluir) {
-        this.habilitarBotaoIncluir = habilitarBotaoIncluir;
-    }
-
     public boolean isHabilitarBotaoAlterar() {
         return habilitarBotaoAlterar;
     }
 
     public void setHabilitarBotaoAlterar(boolean habilitarBotaoAlterar) {
         this.habilitarBotaoAlterar = habilitarBotaoAlterar;
+    }
+
+    public String getConfirmarSenha() {
+        return confirmarSenha;
+    }
+
+    public void setConfirmarSenha(String confirmarSenha) {
+        this.confirmarSenha = confirmarSenha;
+    }
+
+    public String getConfirmarEmail() {
+        return confirmarEmail;
+    }
+
+    public void setConfirmarEmail(String confirmarEmail) {
+        this.confirmarEmail = confirmarEmail;
     }
 
 }

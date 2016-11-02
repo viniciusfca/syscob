@@ -17,14 +17,14 @@
                     <!--<h:outputText value="#{PessoaMB.msg}"/>-->
                 </p:dialog>
 
-                <p:dialog  hideEffect="blind" showEffect="blind" header="PESQUISAR CLIENTE" id="dtPessoa" appendTo="@(body)"  widgetVar="dtPessoa" modal="true"  draggable="false"  width="80%">
+                <p:dialog hideEffect="blind" showEffect="blind" header="PESQUISAR CLIENTE" id="dtPessoa" widgetVar="dtPessoa" draggable="false" width="80%">
 
                     <div class="row">
                         <div class="col-lg-4">
                             <p:outputLabel value="Filtro:"/>
                             <p:selectOneMenu effect="slide" value="#{PessoaMB.tipoConsulta}">
-                                <f:selectItem itemLabel="CPF" itemValue="CPF"/>
                                 <f:selectItem  itemLabel="Nome" itemValue="NOME"/>
+                                <f:selectItem itemLabel="CPF" itemValue="CPF"/>
                             </p:selectOneMenu>
                         </div>
 
@@ -34,29 +34,32 @@
                         </div>
 
                         <div class="col-lg-4" style="width: 5%; margin-top: 2%;">
-                            <p:commandButton style="height: 50%" icon="fa fa-search" value="Pesquisar" action="#{PessoaMB.consultarPessoas('C')}" styleClass="btnMenu"/>
+                            
+                            <!-- Botão Pesquisar -->
+                            <p:commandButton style="height: 50%" icon="fa fa-search" value="Pesquisar" action="#{PessoaMB.consultarPessoas('C')}" styleClass="btnMenu" update ="dt"/>
                         </div>
 
                     </div>
 
-                    <p:dataTable style="width: 100%;font-weight: lighter;margin-top: 1%"  value="#{PessoaMB.pessoas}" var="pessoaDT" emptyMessage="">
+                    <p:dataTable id="dt" style="width: 100%;font-weight: lighter;margin-top: 1%"  value="#{PessoaMB.pessoas}" var="pessoaDT" emptyMessage="Nada encontrado!">
 
                         <p:column headerText="Pessoa" style="font-weight: bold;color: black" width="20%" styleClass="textColumn">
                             <h:outputText value="#{pessoaDT.nome}" styleClass="fontInput"/>
                         </p:column>
                         <p:column headerText="Data do Cadastro" style="font-weight: bold;color: black" width="20%" styleClass="textColumn" >
-                            <h:outputText value="#{pessoaDT.datanascimento}" styleClass="fontInput">
+                            <h:outputText value="#{pessoaDT.dataCadastro}" styleClass="fontInput">
                                 <f:convertDateTime pattern="dd/MM/yyyy" />
                             </h:outputText>
                         </p:column>
                         <p:column width="5%" style="font-weight: bold;color: black" styleClass="textColumn">
+
+                            <!-- Clicar em Alterar Pessoa -->
                             <center>
                                 <p:commandButton action="#{PessoaMB.setPessoa(pessoa)}" style="width: 30px;width: 30px" onclick="PF('dtPessoa').hide();" icon="ui-icon-check" update="formCadastro"/>
                             </center>
                         </p:column>
                     </p:dataTable>
-
-
+                    <br/>
                 </p:dialog>
 
                 <div class="panel panel-primary" style="margin-top: 7%">
@@ -64,11 +67,20 @@
                     <div class="panel-body">
 
                         <div class="row" style="text-align: left">
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
 
-                                <p:commandButton disabled="#{!PessoaMB.habilitarBotaoIncluir}" icon="ui-icon-plus" value="Incluir" oncomplete="PF('msgBox').show();" action="#{PessoaMB.inserirPessoa('C')}" styleClass="btnMenu" update="formCadastro"/>
-                                <p:commandButton disabled="#{!PessoaMB.habilitarBotaoAlterar}" icon="ui-icon-disk" value="Atualizar" oncomplete="PF('msgBox').show();" action="#{PessoaMB.atualizarPessoa()}" style="margin-left: 1%" styleClass="btnMenu"/>
+                                <!-- Incluir -->
+                                <p:commandButton disabled="#{PessoaMB.habilitarBotaoAlterar}" icon="ui-icon-plus" value="Incluir" oncomplete="PF('msgBox').show();" action="#{PessoaMB.inserirPessoa('C')}" styleClass="btnMenu" update="formCadastro"/>
+
+                                <!-- Alterar -->
+                                <p:commandButton disabled="#{!PessoaMB.habilitarBotaoAlterar}" icon="ui-icon-disk" value="Atualizar" oncomplete="PF('msgBox').show();" action="#{PessoaMB.atualizarPessoa()}" style="margin-left: 1%" styleClass="btnMenu" update="formCadastro"/>
+
+                                <!-- Limpar -->
+                                <p:commandButton icon="ui-icon-document" value="Limpar" style="margin-left: 1%" action="#{PessoaMB.limparTela()}" styleClass="btnMenu" update="formCadastro"/>
+
+                                <!-- Pesquisar -->
                                 <p:commandButton icon="ui-icon-search"  value="Pesquisar" style="margin-left: 1%" styleClass="btnMenu" onclick="PF('dtPessoa').show();"/>
+
                             </div>
                         </div>
 
@@ -79,7 +91,7 @@
                         <div class="row" style="text-align: left">
                             <div class="col-lg-3" >
                                 <h:outputLabel value="Nome:" style="display: block" styleClass="fontInput"/>
-                                <p:inputText value="#{PessoaMB.pessoa.nome}" styleClass="fontInput" style="width: 205px"/>
+                                <p:inputText maxlength="120" placeholder="Ex: Marcos Silva" value="#{PessoaMB.pessoa.nome}" styleClass="fontInput" style="width: 205px"/>
                             </div>
 
                             <div class="col-lg-3">
@@ -98,7 +110,7 @@
 
                             <div class="col-lg-3" >
                                 <h:outputLabel value="Data Nascimento:" style="display: block;" styleClass="fontInput"/>
-                                <p:calendar  effect="slide" placeholder="Ex: 01/01/1990" value="#{PessoaMB.pessoa.datanascimento}" locale="pt" pattern="dd/MM/yyyy">
+                                <p:calendar mask="99/99/9999" effect="slide" placeholder="Ex: 01/01/1990" value="#{PessoaMB.pessoa.dataNascimento}" locale="pt" pattern="dd/MM/yyyy">
                                 </p:calendar>
                             </div>
 
@@ -112,8 +124,6 @@
 
                         </div>
 
-
-
                         <div class="panel panel-default" style="margin-top: 2%">
                             <div class="panel-heading" style="font-weight: bold">Dados de Endereço</div>
                         </div>
@@ -123,17 +133,17 @@
 
                             <div class="col-lg-4">
                                 <h:outputLabel value="Endereço:" style="display: block; " styleClass="fontInput"/>
-                                <p:inputText placeholder="Ex: Avenida Brasil" value="#{PessoaMB.pessoa.endereco}" style="width: 100%" styleClass="fontInput"/>
+                                <p:inputText  maxlength="150" placeholder="Ex: Avenida Brasil" value="#{PessoaMB.pessoa.endereco}" style="width: 100%" styleClass="fontInput"/>
                             </div>
 
                             <div class="col-lg-4">
                                 <h:outputLabel value="Número:" style="display: block" styleClass="fontInput"/>
-                                <p:inputNumber placeholder="Ex: 8052" value="#{PessoaMB.pessoa.numero}" style="width: 100%;" styleClass="fontInput"/>
+                                <p:inputMask mask="9?999999999" maxlength="12" slotChar=" " placeholder="Ex: 8052" value="#{PessoaMB.pessoa.numero}" style="width: 100%;" styleClass="fontInput"/>
                             </div>
 
                             <div class="col-lg-4">
                                 <h:outputLabel value="Bairro:" style="display: block" styleClass="fontInput"/>
-                                <p:inputText placeholder="Ex: Jardim Bueno" value="#{PessoaMB.pessoa.bairro}" style="width: 100%" styleClass="fontInput"/>
+                                <p:inputText maxlength="80" placeholder="Ex: Jardim Bueno" value="#{PessoaMB.pessoa.bairro}" style="width: 100%" styleClass="fontInput"/>
                             </div>
                         </div>
 
@@ -141,14 +151,13 @@
 
                             <div class="col-lg-4">
                                 <h:outputLabel value="Complemento:" style="display: block" styleClass="fontInput"/>
-                                <p:inputText placeholder="Ex: Apartamento 21" value="#{PessoaMB.pessoa.complemento}" style="width: 100%" styleClass="fontInput"/>
+                                <p:inputText maxlength="50" placeholder="Ex: Apartamento 21" value="#{PessoaMB.pessoa.complemento}" style="width: 100%" styleClass="fontInput"/>
                             </div>
 
                             <div class="col-lg-4">
                                 <h:outputLabel value="Cidade:" style="display: block" styleClass="fontInput"/>
-                                <p:inputText placeholder="Ex: São Paulo" value="#{PessoaMB.pessoa.cidade}" style="width: 100%" styleClass="fontInput"/>
+                                <p:inputText maxlength="75" placeholder="Ex: São Paulo" value="#{PessoaMB.pessoa.cidade}" style="width: 100%" styleClass="fontInput"/>
                             </div>
-
 
                             <div class="col-lg-4" >
                                 <h:outputLabel value="Estado:" style="display: block;" styleClass="fontInput"/>
@@ -185,8 +194,6 @@
 
                         </div>
 
-
-
                         <div class="panel panel-default" style="margin-top: 2%">
                             <div class="panel-heading" style="font-weight: bold">Dados de Acesso</div>
                         </div>
@@ -195,22 +202,22 @@
 
                             <div class="col-lg-3">
                                 <h:outputLabel value="Telefone:" style="display: block" styleClass="fontInput"/>
-                                <p:inputMask placeholder="Ex: (99) 9999-9999" value="#{PessoaMB.pessoa.telefone}" mask="(99)9999-9999"  style="width: 100%" styleClass="fontInput"/>
+                                <p:inputMask placeholder="Ex: (99) 9999-9999" value="#{PessoaMB.pessoa.telefone}" mask="(99) 9999-9999"  style="width: 100%" styleClass="fontInput"/>
                             </div>
 
                             <div class="col-lg-3">
                                 <h:outputLabel value="Celular:" style="display: block" styleClass="fontInput"/>
-                                <p:inputMask placeholder="Ex: (99) 99999-9999" mask="(99)99999-9999" value="#{PessoaMB.pessoa.celular}"  style="width: 100%" styleClass="fontInput"/>
+                                <p:inputMask placeholder="Ex: (99) 99999-9999" mask="(99) 99999-9999" value="#{PessoaMB.pessoa.celular}"  style="width: 100%" styleClass="fontInput"/>
                             </div>
 
                             <div class="col-lg-3">
                                 <h:outputLabel value="E-mail:" style="display: block" styleClass="fontInput"/>
-                                <p:inputText placeholder="Ex: exemplo@exemplo.com.br" value="#{PessoaMB.pessoa.email}" style="width: 100%" styleClass="fontInput"/>
+                                <p:inputText maxlength="75" placeholder="Ex: exemplo@exemplo.com.br" value="#{PessoaMB.pessoa.email}" style="width: 100%" styleClass="fontInput"/>
                             </div>
 
                             <div class="col-lg-3">
                                 <h:outputLabel value="Confirmar E-mail:" style="display: block" styleClass="fontInput"/>
-                                <p:inputText placeholder="Ex: exemplo@exemplo.com.br" style="width: 100%" styleClass="fontInput"/>
+                                <p:inputText maxlength="75" value="#{PessoaMB.confirmarEmail}" placeholder="Ex: exemplo@exemplo.com.br" style="width: 100%" styleClass="fontInput"/>
                             </div>
 
                         </div>
@@ -218,17 +225,17 @@
                         <div class="row" style="text-align: left; margin-top: 1%">
                             <div class="col-lg-3">
                                 <h:outputLabel value="Usuário:" style="display: block" styleClass="fontInput"/>
-                                <p:inputText value="#{PessoaMB.pessoa.username}"   style="width: 100%" styleClass="fontInput"/>
+                                <p:inputText maxlength="25" value="#{PessoaMB.pessoa.username}"   style="width: 100%" styleClass="fontInput"/>
                             </div>
 
                             <div class="col-lg-3">
                                 <h:outputLabel value="Senha:" style="display: block" styleClass="fontInput"/>
-                                <p:password  value="#{PessoaMB.pessoa.senha}"  style="width: 100%" styleClass="fontInput"/>
+                                <p:password maxlength="30" value="#{PessoaMB.pessoa.senha}" style="width: 100%" styleClass="fontInput"/>
                             </div>
 
                             <div class="col-lg-3">
                                 <h:outputLabel value="Confirmar Senha:" style="display: block" styleClass="fontInput"/>
-                                <p:password  style="width: 100%" styleClass="fontInput"/>
+                                <p:password maxlength="30" value="#{PessoaMB.confirmarSenha}" style="width: 100%" styleClass="fontInput"/>
                             </div>
 
                         </div>

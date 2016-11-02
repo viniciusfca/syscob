@@ -31,7 +31,8 @@ public class Pessoa {
     private String username;
     private String senha;
     
-    private Date datanascimento;
+    private Date dataNascimento;
+    private Date dataCadastro;
 
     public Integer getId() {
         
@@ -194,12 +195,20 @@ public class Pessoa {
         this.senha = senha;
     }
 
-    public Date getDatanascimento() {
-        return datanascimento;
+    public Date getDataNascimento() {
+        return dataNascimento;
     }
 
-    public void setDatanascimento(Date datanascimento) {
-        this.datanascimento = datanascimento;
+    public void setDataNascimento(Date dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
+
+    public Date getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(Date dataCadastro) {
+        this.dataCadastro = dataCadastro;
     }
 
 }

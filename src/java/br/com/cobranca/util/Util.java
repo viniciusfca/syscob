@@ -547,6 +547,7 @@ public class Util {
                     .replace("-", "")
                     .replace("(", "")
                     .replace(")", "")
+                    .replace(" ", "")
                     .trim();
         }
 
