@@ -21,17 +21,19 @@ import javax.faces.context.FacesContext;
 public class Util {
 
     /**
-    * Metodo que valida email
-    * @param email
-    * @return 
-    */
-    public static boolean isEmailValido(String email){
-        if ((email == null) || (email.trim().length() == 0))
+     * Metodo que valida email
+     *
+     * @param email
+     * @return
+     */
+    public static boolean isEmailValido(String email) {
+        if ((email == null) || (email.trim().length() == 0)) {
             return false;
+        }
         String emailPattern = "\\b(^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-])+(\\.[A-Za-z0-9-]+)*((\\.[A-Za-z0-9]{2,})|(\\.[A-Za-z0-9]{2,}\\.[A-Za-z0-9]{2,}))$)\\b";
         Pattern pattern = Pattern.compile(emailPattern, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(email);
-        return matcher.matches();        
+        return matcher.matches();
     }
 
     public static String StringPrimeiraLetraMaiuscula(String str) {
@@ -73,18 +75,12 @@ public class Util {
             ps.close();
 
             // Comparar valores dos dois objetos
-            int i = 1;
             strSql = "UPDATE " + nomeTabela + " SET ";
 
             boolean efetuarAlteracao;
             boolean usarVirgula = false;
 
             for (Field field : objAlterado.getClass().getDeclaredFields()) {
-
-                if (usarVirgula) {
-                    strSql = strSql + ", ";
-                    usarVirgula = false;
-                }
 
                 efetuarAlteracao = false;
 
@@ -168,20 +164,27 @@ public class Util {
                 }
 
                 if (efetuarAlteracao) {
+
+                    if (usarVirgula) {
+                        strSql = strSql + ", ";
+                        //usarVirgula = false;
+                    }
+                    
                     strSql = strSql + nomeColuna + " = ? ";
                     usarVirgula = true;
                 }
 
-                i++;
             }
 
             //Se não houve alteração, retorna falso
             if (!strSql.contains("?")) {
-                return false;
+                return true;
             }
 
             strSql = strSql + strWhere;
             ps = con.prepareStatement(strSql);
+
+            int i = 1;
 
             // ps.set?()
             for (Field field : objAlterado.getClass().getDeclaredFields()) {
@@ -209,6 +212,7 @@ public class Util {
                         } else {
                             ps.setInt(i, valorAlterado);
                         }
+                        i++;
                     }
 
                 } else if (tipoColuna.equals("String")) {
@@ -217,6 +221,7 @@ public class Util {
 
                     if (!valorOriginal.equals(valorAlterado)) {
                         ps.setString(i, valorAlterado);
+                        i++;
                     }
 
                 } else if (tipoColuna.equals("Double")) {
@@ -230,6 +235,7 @@ public class Util {
                         } else {
                             ps.setDouble(i, valorAlterado);
                         }
+                        i++;
                     }
 
                 } else if (tipoColuna.equals("Float")) {
@@ -243,6 +249,7 @@ public class Util {
                         } else {
                             ps.setFloat(i, valorAlterado);
                         }
+                        i++;
                     }
 
                 } else if (tipoColuna.equals("Long")) {
@@ -256,6 +263,7 @@ public class Util {
                         } else {
                             ps.setLong(i, valorAlterado);
                         }
+                        i++;
                     }
 
                 } else if (tipoColuna.equals("Boolean")) {
@@ -269,6 +277,7 @@ public class Util {
                         } else {
                             ps.setBoolean(i, valorAlterado);
                         }
+                        i++;
                     }
 
                 } else if (tipoColuna.equals("Date")) {
@@ -282,13 +291,13 @@ public class Util {
                         } else {
                             ps.setDate(i, new java.sql.Date(valorAlterado.getTime()));
                         }
+                        i++;
                     }
 
                 } else {
                     return false;
                 }
 
-                i++;
             }
 
             // fim

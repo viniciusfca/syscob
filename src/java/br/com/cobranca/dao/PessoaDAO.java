@@ -46,11 +46,21 @@ public class PessoaDAO {
 
         try {
 
-            String strSql = "SELECT * FROM PESSOA WHERE TIPO = ? AND " + tipoConsulta + " = ?";
+            String strSql = "SELECT * FROM PESSOA WHERE TIPO = ? AND " + tipoConsulta;
+
+            if (tipoConsulta.equals("CPF")) {
+                strSql = strSql + " = ?";
+            } else {
+                strSql = strSql + " LIKE '%" + valorConsulta + "%'";
+            }
+
             PreparedStatement ps = conexao.conectar().prepareStatement(strSql);
 
             ps.setString(1, tipoPessoa);
-            ps.setString(2, valorConsulta);
+
+            if (tipoConsulta.equals("CPF")) {
+                ps.setString(2, valorConsulta);
+            }
 
             ResultSet rs = ps.executeQuery();
 
@@ -139,9 +149,14 @@ public class PessoaDAO {
 
         Conexao conexao = new Conexao();
         boolean retorno = false;
-        
+
         try {
             String strSQL = "SELECT * FROM PESSOA WHERE TIPO = ? AND (CPF = ? OR USERNAME = ?)";
+            
+            if(pessoa.getId() != null && pessoa.getId() > 0){
+                strSQL = strSQL + " AND ID <> ?";
+            }
+            
             PreparedStatement ps = conexao.conectar().prepareStatement(strSQL);
 
             //Where
@@ -149,6 +164,10 @@ public class PessoaDAO {
             ps.setString(2, pessoa.getCpf());
             ps.setString(3, pessoa.getUsername());
 
+            if(pessoa.getId() != null && pessoa.getId() > 0){
+                ps.setInt(4, pessoa.getId());
+            }
+            
             ResultSet rs = ps.executeQuery();
 
             if (!rs.next()) {

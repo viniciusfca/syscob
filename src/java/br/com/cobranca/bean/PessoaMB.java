@@ -26,8 +26,8 @@ public class PessoaMB {
 
     private String tipoConsulta;
     private String valorConsulta;
-    
-    private Date dataNasc;
+
+    private Date valorMaximoDataNascimento;
 
     private boolean habilitarBotaoAlterar;
 
@@ -35,6 +35,7 @@ public class PessoaMB {
     private Pessoa pessoa;
 
     public ArrayList<Pessoa> pessoas;
+    private String senhaBackup;
 
     public PessoaMB() {
         this.dao = new PessoaDAO();
@@ -46,16 +47,29 @@ public class PessoaMB {
 
         pessoa = new Pessoa();
         this.pessoas = new ArrayList<>();
-        
-        dataNasc = new Date();
+
+        valorMaximoDataNascimento = new Date();
 
         habilitarBotaoAlterar = false;
+        valorConsulta = "";
 
+        confirmarEmail = "";
+        senhaBackup = "";
     }
 
     private boolean validarPessoa() {
 
         msg = "";
+
+        if (habilitarBotaoAlterar) {
+
+            if ((confirmarSenha == null || confirmarSenha.isEmpty())
+                    && (pessoa.getSenha() == null || pessoa.getSenha().isEmpty())) {
+                confirmarSenha = senhaBackup;
+                pessoa.setSenha(senhaBackup);
+            }
+
+        }
 
         if (pessoa.getNome() == null || pessoa.getNome().isEmpty()) {
             msg = "Nome inválido!";
@@ -114,12 +128,11 @@ public class PessoaMB {
                     msg = "Alteração não efetuada!";
                 }
             }
-            
-            
+
         } catch (Exception ex) {
             msg = "Erro ao efetuar a alteração: " + ex.getMessage();
             //Logger.getLogger(PessoaMB.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
+        } finally {
             Util.mostrarMensagemSucesso("Informação", msg);
         }
     }
@@ -145,7 +158,7 @@ public class PessoaMB {
         } catch (Exception ex) {
             msg = "Erro ao efetuar a inclusão: " + ex.getMessage();
             //Logger.getLogger(PessoaMB.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
+        } finally {
             Util.mostrarMensagemSucesso("Informação", msg);
         }
 
@@ -154,6 +167,8 @@ public class PessoaMB {
     public void consultarPessoas(String tipo) {
 
         if (valorConsulta != null && !valorConsulta.isEmpty()) {
+
+            valorConsulta = valorConsulta.replace("'", "");
 
             if (pessoas != null) {
                 pessoas.clear();
@@ -174,9 +189,13 @@ public class PessoaMB {
 
     public void setPessoa(Pessoa pessoa) {
         this.pessoa = pessoa;
+
         pessoas.clear();
         valorConsulta = "";
         habilitarBotaoAlterar = true;
+
+        confirmarEmail = pessoa.getEmail();
+        senhaBackup = pessoa.getSenha();
     }
 
     public ArrayList<Pessoa> getPessoas() {
@@ -235,14 +254,12 @@ public class PessoaMB {
         this.confirmarEmail = confirmarEmail;
     }
 
-    public Date getDataNasc() {
-        return dataNasc;
+    public Date getValorMaximoDataNascimento() {
+        return valorMaximoDataNascimento;
     }
 
-    public void setDataNasc(Date dataNasc) {
-        this.dataNasc = dataNasc;
+    public void setValorMaximoDataNascimento(Date valorMaximoDataNascimento) {
+        this.valorMaximoDataNascimento = valorMaximoDataNascimento;
     }
-    
-    
 
 }

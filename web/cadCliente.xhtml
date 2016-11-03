@@ -28,7 +28,7 @@
 
                         <div class="col-lg-4" style="width: 40%">
                             <p:outputLabel value="Conteúdo:"/>
-                            <p:inputText  placeholder="Conteúdo da Pesquisa" value="#{PessoaMB.valorConsulta}" style="width: 100%;"/>
+                            <p:inputText maxlength="120" placeholder="Conteúdo da Pesquisa" value="#{PessoaMB.valorConsulta}" style="width: 100%;"/>
                         </div>
 
                         <div class="col-lg-4" style="width: 5%; margin-top: 2%;">
@@ -41,15 +41,21 @@
 
                     <p:dataTable id="dt" style="width: 100%;font-weight: lighter;margin-top: 1%"  value="#{PessoaMB.pessoas}" var="pessoaDT" emptyMessage="Nada encontrado!">
 
-                        <p:column headerText="Pessoa" style="font-weight: bold;color: black" width="20%" styleClass="textColumn">
+                        <p:column headerText="Nome" style="font-weight: bold;color: black" width="20%" styleClass="textColumn">
                             <h:outputText value="#{pessoaDT.nome}" styleClass="fontInput"/>
                         </p:column>
-                        <p:column headerText="Data do Cadastro" style="font-weight: bold;color: black" width="20%" styleClass="textColumn" >
+                        <p:column headerText="CPF" style="font-weight: bold;color: black" width="10%" styleClass="textColumn">
+                            <h:outputText value="#{pessoaDT.cpf}" styleClass="fontInput"/>
+                        </p:column>
+                        <p:column headerText="E-mail" style="font-weight: bold;color: black" width="20%" styleClass="textColumn">
+                            <h:outputText value="#{pessoaDT.email}" styleClass="fontInput"/>
+                        </p:column>
+                        <p:column headerText="Data do Cadastro" style="font-weight: bold;color: black" width="10%" styleClass="textColumn" >
                             <h:outputText value="#{pessoaDT.dataCadastro}" styleClass="fontInput">
                                 <f:convertDateTime pattern="dd/MM/yyyy" />
                             </h:outputText>
                         </p:column>
-                        <p:column width="5%" style="font-weight: bold;color: black" styleClass="textColumn">
+                        <p:column headerText="Alterar" width="5%" style="font-weight: bold;color: black" styleClass="textColumn">
 
                             <!-- Clicar em Alterar Pessoa -->
                             <center>
@@ -61,7 +67,7 @@
                 </p:dialog>
 
                 <div class="panel panel-primary" style="margin-top: 7%">
-                    <div class="panel-heading" style="font-weight: bold">Cadastro de Pessoa</div>
+                    <div class="panel-heading" style="font-weight: bold">Cadastro de Cliente</div>
                     <div class="panel-body">
 
                         <div class="row" style="text-align: left">
@@ -99,7 +105,7 @@
 
                             <div class="col-lg-3">
                                 <h:outputLabel value="RG:" style="display: block" styleClass="fontInput"/>
-                                <p:inputText  value="#{PessoaMB.pessoa.rg}" styleClass="fontInput" style="width: 100%"/>
+                                <p:inputText maxlength="11" placeholder="Ex: 999999999" value="#{PessoaMB.pessoa.rg}" styleClass="fontInput" style="width: 100%"/>
                             </div>
 
                         </div>
@@ -108,7 +114,7 @@
 
                             <div class="col-lg-3" >
                                 <h:outputLabel value="Data Nascimento:" style="display: block;" styleClass="fontInput"/>
-                                <p:calendar mask="99/99/9999" effect="slide" maxdate="#{PessoaMB.dataNasc}" placeholder="Ex: 01/01/1990" value="#{PessoaMB.pessoa.dataNascimento}" locale="pt" pattern="dd/MM/yyyy">
+                                <p:calendar mask="99/99/9999" effect="slide" maxdate="#{PessoaMB.valorMaximoDataNascimento}" placeholder="Ex: 01/01/1990" value="#{PessoaMB.pessoa.dataNascimento}" locale="pt" pattern="dd/MM/yyyy">
                                 </p:calendar>
                             </div>
 
