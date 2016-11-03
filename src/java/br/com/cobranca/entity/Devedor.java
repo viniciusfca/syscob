@@ -6,15 +6,16 @@
 package br.com.cobranca.entity;
 
 import java.util.Date;
+import br.com.cobranca.util.Util;
 
 /**
  *
  * @author Vinicius
  */
 public class Devedor {
-    
-    private int id;
-    
+
+    private Integer id;
+
     private String nome;
     private String cpf;
     private String rg;
@@ -28,15 +29,15 @@ public class Devedor {
     private String telefone;
     private String celular;
     private String email;
-    
+
     private Date dataNascimento;
     private Date dataCadastro;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -53,7 +54,10 @@ public class Devedor {
     }
 
     public void setCpf(String cpf) {
-        this.cpf = cpf;
+        if (cpf != null && cpf != "") {
+            this.cpf = Util.retirarMascara(cpf);
+        }
+
     }
 
     public String getRg() {
@@ -159,6 +163,5 @@ public class Devedor {
     public void setDataCadastro(Date dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
-    
-    
+
 }

@@ -56,7 +56,12 @@ public class Pessoa {
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        if(nome == null || nome == ""){
+            this.nome = "";
+        }else{
+            this.nome = nome;
+        }
+        
     }
 
     public String getSexo() {

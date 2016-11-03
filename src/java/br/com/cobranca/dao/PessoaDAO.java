@@ -186,5 +186,53 @@ public class PessoaDAO {
         }
 
     }
+    
+    /**
+      * Metodo que retorna pessoa pelo CPF
+      * @param cpf
+      * @return 
+      */
+     public Pessoa getByCpf(String cpf){
+         Conexao conexao = new Conexao();
+         Pessoa pessoa = new Pessoa();
+         
+         String sql = "SELECT * FROM PESSOA WHERE cpf = '"+cpf+"'";
+         
+         PreparedStatement ps;
+         
+         try{
+             ps = conexao.conectar().prepareStatement(sql);
+             ResultSet rs = ps.executeQuery();
+             
+             if(rs.next()){
+                 pessoa.setId(rs.getInt("id"));
+                 pessoa.setNome(rs.getString("nome"));
+                 pessoa.setSexo(rs.getString("sexo"));
+                 pessoa.setCpf(rs.getString("cpf"));
+                 pessoa.setRg(rs.getString("rg"));
+                 pessoa.setDataNascimento(rs.getDate("datanascimento"));
+                 pessoa.setDataCadastro(rs.getDate("datacadastro"));
+                 pessoa.setEmail(rs.getString("email"));
+                 pessoa.setTelefone(rs.getString("telefone"));
+                 pessoa.setCelular(rs.getString("celular"));
+                 pessoa.setEndereco(rs.getString("endereco"));
+                 pessoa.setNumero(rs.getLong("numero"));
+                 pessoa.setBairro(rs.getString("bairro"));
+                 pessoa.setComplemento(rs.getString("complemento"));
+                 pessoa.setCidade(rs.getString("cidade"));
+                 pessoa.setUf(rs.getString("uf"));
+                 pessoa.setTipo(rs.getString("tipo"));
+                 pessoa.setUsername(rs.getString("username"));
+                 pessoa.setSenha(rs.getString("senha"));
+             }
+             
+         }catch(Exception e){
+             System.out.println("Erro: "+ e);
+         }finally{
+             conexao.desconectar();
+         }
+         
+         return pessoa;
+     }
 
 }

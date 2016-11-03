@@ -56,7 +56,26 @@ public class PessoaMB {
         confirmarEmail = "";
         senhaBackup = "";
     }
+    
+    
+    
+     /**
+     * Metodo que retorna devedor pelo cpf
+     */
+    public void buscarPessoaByCpf() {
 
+        if (Util.isCPF(pessoa.getCpf())) {
+            pessoa = dao.getByCpf(pessoa.getCpf());
+
+            if (pessoa.getId() > 0) {
+                Util.mostrarMensagemSucesso("Informação", "Pessoa já cadastrado");
+            }
+        } else {
+            Util.mostrarMensagemErro("Informação", "CPF Inválido");
+        }
+
+    }
+    
     private boolean validarPessoa() {
 
         msg = "";

@@ -14,7 +14,7 @@ public class Conexao {
     private final String URL = "jdbc:mysql://localhost:3306/AppGestorCobranca";
 
     private final String USUARIO = "root";
-    private final String SENHA = "";
+    private final String SENHA = "1234";
 
     public Connection connection;
 

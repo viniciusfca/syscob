@@ -27,7 +27,7 @@ public class DevedorDAO {
 
         try {
 
-            String strSql = "SELECT * FROM PESSOA";
+            String strSql = "SELECT * FROM DEVEDOR";
             PreparedStatement ps = conexao.conectar().prepareStatement(strSql);
 
           
@@ -52,6 +52,53 @@ public class DevedorDAO {
 
         return devedores;
     }
+    
+    
+    
+    public ArrayList<Devedor> get(String tipoConsulta, String valorConsulta) throws Exception {
+
+        Conexao conexao = new Conexao();
+        ArrayList<Devedor> devedores = new ArrayList<>();
+
+        try {
+
+            String strSql = "SELECT * FROM DEVEDOR WHERE " + tipoConsulta;
+
+            if (tipoConsulta.equals("CPF")) {
+                strSql = strSql + " = ?";
+            } else {
+                strSql = strSql + " LIKE '%" + valorConsulta + "%'";
+            }
+           
+            PreparedStatement ps = conexao.conectar().prepareStatement(strSql);
+
+            
+
+            if (tipoConsulta.equals("CPF")) {
+                ps.setString(1, valorConsulta);
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                Devedor p = Util.atribuirValores(Devedor.class, rs);
+                devedores.add(p);
+
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (Exception ex) {
+            throw new Exception(ex.getMessage());
+        } finally {
+            conexao.desconectar();
+        }
+
+        return devedores;
+    }
+
     
      public int post(Devedor devedor) throws Exception {
 
@@ -109,4 +156,50 @@ public class DevedorDAO {
         }
 
     }
+     
+     /**
+      * Metodo que retorna devedor pelo CPF
+      * @param cpf
+      * @return 
+      */
+     public Devedor getByCpf(String cpf){
+         Conexao conexao = new Conexao();
+         Devedor devedor = new Devedor();
+         
+         String sql = "SELECT * FROM DEVEDOR WHERE cpf = '"+cpf+"'";
+         
+         PreparedStatement ps;
+         
+         try{
+             ps = conexao.conectar().prepareStatement(sql);
+             ResultSet rs = ps.executeQuery();
+             
+             if(rs.next()){
+                 devedor.setId(rs.getInt("id"));
+                 devedor.setNome(rs.getString("nome"));
+                 devedor.setSexo(rs.getString("sexo"));
+                 devedor.setCpf(rs.getString("cpf"));
+                 devedor.setRg(rs.getString("rg"));
+                 devedor.setDataNascimento(rs.getDate("datanascimento"));
+                 devedor.setDataCadastro(rs.getDate("datacadastro"));
+                 devedor.setEmail(rs.getString("email"));
+                 devedor.setTelefone(rs.getString("telefone"));
+                 devedor.setCelular(rs.getString("celular"));
+                 devedor.setEndereco(rs.getString("endereco"));
+                 devedor.setNumero(rs.getString("numero"));
+                 devedor.setBairro(rs.getString("bairro"));
+                 devedor.setComplemento(rs.getString("complemento"));
+                 devedor.setCidade(rs.getString("cidade"));
+                 devedor.setUf(rs.getString("uf"));
+             }
+             
+         }catch(Exception e){
+             System.out.println("Erro: "+ e);
+         }finally{
+             conexao.desconectar();
+         }
+         
+         return devedor;
+     }
+     
 }

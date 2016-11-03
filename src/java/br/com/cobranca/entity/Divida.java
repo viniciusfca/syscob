@@ -13,6 +13,8 @@ import java.util.Date;
  */
 public class Divida {
     
+    private int id;
+    
     private Devedor devedor;
     private Pessoa cliente;
     
@@ -35,8 +37,12 @@ public class Divida {
         return cliente;
     }
 
-    public void setCliente(Pessoa cliente) {
-        this.cliente = cliente;
+    public void setCliente(Pessoa cliente) { 
+           if(cliente ==  null){
+                this.cliente = new Pessoa();
+           }else{
+                this.cliente = cliente;
+           }
     }
 
     public double getValorDivida() {
@@ -69,6 +75,14 @@ public class Divida {
 
     public void setDataCadastro(Date dataCadastro) {
         this.dataCadastro = dataCadastro;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
     
     
