@@ -13,24 +13,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 
 public class Util {
 
-    public static boolean ValidarEmail(String email) {
-
-        boolean retorno = false;
-        
-        if (!email.isEmpty()) {
-            
-            if(email.contains("@") && email.contains(".")){
-                retorno = true;
-            }
-            
-        }
-
-        return retorno;
+    /**
+    * Metodo que valida email
+    * @param email
+    * @return 
+    */
+    public static boolean isEmailValido(String email){
+        if ((email == null) || (email.trim().length() == 0))
+            return false;
+        String emailPattern = "\\b(^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-])+(\\.[A-Za-z0-9-]+)*((\\.[A-Za-z0-9]{2,})|(\\.[A-Za-z0-9]{2,}\\.[A-Za-z0-9]{2,}))$)\\b";
+        Pattern pattern = Pattern.compile(emailPattern, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();        
     }
-    
+
     public static String StringPrimeiraLetraMaiuscula(String str) {
 
         if (!str.isEmpty()) {
@@ -42,19 +45,18 @@ public class Util {
 
     public static <T> boolean alterarRegistro(T objAlterado, Class<T> classe, Connection con, String strWhere) throws Exception, SQLException {
 
-        if(strWhere == null || strWhere.trim().equals("")){
+        if (strWhere == null || strWhere.trim().equals("")) {
             return false;
         }
-        
+
         PreparedStatement ps = null;
         ResultSet rs = null;
-        
+
         T objOriginal = classe.newInstance();
-                      
-        try{
-        
+
+        try {
+
             // Recuperar objeto original no banco de dados
-            
             String nomeTabela = objAlterado.getClass().getSimpleName();
             String strSql = "SELECT * FROM " + nomeTabela + " " + strWhere;
 
@@ -63,32 +65,29 @@ public class Util {
 
             if (rs.next()) {
                 objOriginal = Util.atribuirValores(classe, rs);
-            }
-
-            else{
+            } else {
                 return false;
             }
 
             rs.close();
             ps.close();
-            
+
             // Comparar valores dos dois objetos
-            
             int i = 1;
             strSql = "UPDATE " + nomeTabela + " SET ";
-                        
+
             boolean efetuarAlteracao;
             boolean usarVirgula = false;
-            
+
             for (Field field : objAlterado.getClass().getDeclaredFields()) {
-                
-                if(usarVirgula){
+
+                if (usarVirgula) {
                     strSql = strSql + ", ";
                     usarVirgula = false;
                 }
-                
+
                 efetuarAlteracao = false;
-                
+
                 String nomeColuna = field.getName();
                 String tipoColuna = field.getType().getSimpleName();
 
@@ -106,34 +105,34 @@ public class Util {
                     Integer valorOriginal = (Integer) met.invoke(objOriginal);
                     Integer valorAlterado = (Integer) met.invoke(objAlterado);
 
-                    if(!valorOriginal.equals(valorAlterado)){
+                    if (!valorOriginal.equals(valorAlterado)) {
                         efetuarAlteracao = true;
                     }
-                    
+
                 } else if (tipoColuna.equals("String")) {
-                    
+
                     String valorOriginal = (String) met.invoke(objOriginal);
                     String valorAlterado = (String) met.invoke(objAlterado);
 
-                    if(!valorOriginal.equals(valorAlterado)){
+                    if (!valorOriginal.equals(valorAlterado)) {
                         efetuarAlteracao = true;
                     }
-                    
+
                 } else if (tipoColuna.equals("Double")) {
 
                     Double valorOriginal = (Double) met.invoke(objOriginal);
                     Double valorAlterado = (Double) met.invoke(objAlterado);
 
-                    if(!valorOriginal.equals(valorAlterado)){
+                    if (!valorOriginal.equals(valorAlterado)) {
                         efetuarAlteracao = true;
                     }
-                    
+
                 } else if (tipoColuna.equals("Float")) {
 
                     Float valorOriginal = (Float) met.invoke(objOriginal);
                     Float valorAlterado = (Float) met.invoke(objAlterado);
 
-                    if(!valorOriginal.equals(valorAlterado)){
+                    if (!valorOriginal.equals(valorAlterado)) {
                         efetuarAlteracao = true;
                     }
 
@@ -142,25 +141,25 @@ public class Util {
                     Long valorOriginal = (Long) met.invoke(objOriginal);
                     Long valorAlterado = (Long) met.invoke(objAlterado);
 
-                    if(!valorOriginal.equals(valorAlterado)){
+                    if (!valorOriginal.equals(valorAlterado)) {
                         efetuarAlteracao = true;
                     }
 
                 } else if (tipoColuna.equals("Boolean")) {
-                    
+
                     Boolean valorOriginal = (Boolean) met.invoke(objOriginal);
                     Boolean valorAlterado = (Boolean) met.invoke(objAlterado);
 
-                    if(!valorOriginal.equals(valorAlterado)){
+                    if (!valorOriginal.equals(valorAlterado)) {
                         efetuarAlteracao = true;
                     }
 
                 } else if (tipoColuna.equals("Date")) {
-                    
+
                     Date valorOriginal = (Date) met.invoke(objOriginal);
                     Date valorAlterado = (Date) met.invoke(objAlterado);
 
-                    if(!valorOriginal.equals(valorAlterado)){
+                    if (!valorOriginal.equals(valorAlterado)) {
                         efetuarAlteracao = true;
                     }
 
@@ -168,26 +167,25 @@ public class Util {
                     return false;
                 }
 
-                if(efetuarAlteracao){
+                if (efetuarAlteracao) {
                     strSql = strSql + nomeColuna + " = ? ";
                     usarVirgula = true;
                 }
-                
+
                 i++;
             }
-            
+
             //Se não houve alteração, retorna falso
-            if(!strSql.contains("?")){
+            if (!strSql.contains("?")) {
                 return false;
             }
-            
+
             strSql = strSql + strWhere;
             ps = con.prepareStatement(strSql);
-            
+
             // ps.set?()
-            
             for (Field field : objAlterado.getClass().getDeclaredFields()) {
-                
+
                 String nomeColuna = field.getName();
                 String tipoColuna = field.getType().getSimpleName();
 
@@ -205,28 +203,28 @@ public class Util {
                     Integer valorOriginal = (Integer) met.invoke(objOriginal);
                     Integer valorAlterado = (Integer) met.invoke(objAlterado);
 
-                    if(!valorOriginal.equals(valorAlterado)){
+                    if (!valorOriginal.equals(valorAlterado)) {
                         if (valorAlterado == null) {
                             ps.setString(i, null);
                         } else {
                             ps.setInt(i, valorAlterado);
                         }
                     }
-                    
+
                 } else if (tipoColuna.equals("String")) {
                     String valorOriginal = (String) met.invoke(objOriginal);
                     String valorAlterado = (String) met.invoke(objAlterado);
 
-                    if(!valorOriginal.equals(valorAlterado)){
+                    if (!valorOriginal.equals(valorAlterado)) {
                         ps.setString(i, valorAlterado);
                     }
-                    
+
                 } else if (tipoColuna.equals("Double")) {
 
                     Double valorOriginal = (Double) met.invoke(objOriginal);
                     Double valorAlterado = (Double) met.invoke(objAlterado);
 
-                    if(!valorOriginal.equals(valorAlterado)){
+                    if (!valorOriginal.equals(valorAlterado)) {
                         if (valorAlterado == null) {
                             ps.setString(i, null);
                         } else {
@@ -239,7 +237,7 @@ public class Util {
                     Float valorOriginal = (Float) met.invoke(objOriginal);
                     Float valorAlterado = (Float) met.invoke(objAlterado);
 
-                    if(!valorOriginal.equals(valorAlterado)){
+                    if (!valorOriginal.equals(valorAlterado)) {
                         if (valorAlterado == null) {
                             ps.setString(i, null);
                         } else {
@@ -252,7 +250,7 @@ public class Util {
                     Long valorOriginal = (Long) met.invoke(objOriginal);
                     Long valorAlterado = (Long) met.invoke(objAlterado);
 
-                    if(!valorOriginal.equals(valorAlterado)){
+                    if (!valorOriginal.equals(valorAlterado)) {
                         if (valorAlterado == null) {
                             ps.setString(i, null);
                         } else {
@@ -261,11 +259,11 @@ public class Util {
                     }
 
                 } else if (tipoColuna.equals("Boolean")) {
-                    
+
                     Boolean valorOriginal = (Boolean) met.invoke(objOriginal);
                     Boolean valorAlterado = (Boolean) met.invoke(objAlterado);
 
-                    if(!valorOriginal.equals(valorAlterado)){
+                    if (!valorOriginal.equals(valorAlterado)) {
                         if (valorAlterado == null) {
                             ps.setString(i, null);
                         } else {
@@ -274,11 +272,11 @@ public class Util {
                     }
 
                 } else if (tipoColuna.equals("Date")) {
-                    
+
                     Date valorOriginal = (Date) met.invoke(objOriginal);
                     Date valorAlterado = (Date) met.invoke(objAlterado);
 
-                    if(!valorOriginal.equals(valorAlterado)){
+                    if (!valorOriginal.equals(valorAlterado)) {
                         if (valorAlterado == null) {
                             ps.setString(i, null);
                         } else {
@@ -292,37 +290,30 @@ public class Util {
 
                 i++;
             }
-            
+
             // fim
-            
             int qtdLinhasAfetadas = ps.executeUpdate();
 
             if (qtdLinhasAfetadas <= 0) {
                 return false;
             }
-        }
-            
-        catch(Exception ex){
+        } catch (Exception ex) {
             throw new Exception(ex.getMessage());
-        }
+        } finally {
 
-        finally{
-            
-            if(rs != null)
-            {
+            if (rs != null) {
                 rs.close();
             }
 
-            if(ps != null)
-            {
+            if (ps != null) {
                 ps.close();
             }
         }
 
         return true;
-        
+
     }
-    
+
     public static <T> int inserirRegistro(T obj, Connection con) throws Exception {
 
         int id = 0;
@@ -553,6 +544,98 @@ public class Util {
 
         return null;
 
+    }
+
+    /**
+     * Método que mostra mensagem de sucesso
+     */
+    public static void mostrarMensagemSucesso(String titulo, String mensagem) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, titulo, mensagem));
+    }
+
+    /**
+     * Método que mostra mensagem de alerta
+     */
+    public static void mostrarMensagemAlerta(String titulo, String mensagem) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, titulo, mensagem));
+    }
+
+    /**
+     * Método que mostra mensagem de erro
+     */
+    public static void mostrarMensagemErro(String titulo, String mensagem) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, titulo, mensagem));
+    }
+
+    /**
+     * METODO VALIDA O CPF
+     *
+     * @param pCPF
+     * @return
+     */
+    public static boolean isCPF(String pCPF) {
+        String CPF = pCPF.replace(".", "").replace("-", "").trim();
+        // considera-se erro CPF's formados por uma sequencia de numeros iguais
+        if (CPF.equals("00000000000") || CPF.equals("11111111111")
+                || CPF.equals("22222222222") || CPF.equals("33333333333")
+                || CPF.equals("44444444444") || CPF.equals("55555555555")
+                || CPF.equals("66666666666") || CPF.equals("77777777777")
+                || CPF.equals("88888888888") || CPF.equals("99999999999")
+                || (CPF.length() != 11)) {
+            return (false);
+        }
+
+        char dig10, dig11;
+        int sm, i, r, num, peso;
+
+// "try" - protege o codigo para eventuais erros de conversao de tipo (int)
+        try {
+// Calculo do 1o. Digito Verificador
+            sm = 0;
+            peso = 10;
+            for (i = 0; i < 9; i++) {
+// converte o i-esimo caractere do CPF em um numero:
+// por exemplo, transforma o caractere '0' no inteiro 0         
+// (48 eh a posicao de '0' na tabela ASCII)         
+                num = (int) (CPF.charAt(i) - 48);
+                sm = sm + (num * peso);
+                peso = peso - 1;
+            }
+
+            r = 11 - (sm % 11);
+            if ((r == 10) || (r == 11)) {
+                dig10 = '0';
+            } else {
+                dig10 = (char) (r + 48); // converte no respectivo caractere numerico
+            }
+// Calculo do 2o. Digito Verificador
+            sm = 0;
+            peso = 11;
+            for (i = 0; i < 10; i++) {
+                num = (int) (CPF.charAt(i) - 48);
+                sm = sm + (num * peso);
+                peso = peso - 1;
+            }
+
+            r = 11 - (sm % 11);
+            if ((r == 10) || (r == 11)) {
+                dig11 = '0';
+            } else {
+                dig11 = (char) (r + 48);
+            }
+
+// Verifica se os digitos calculados conferem com os digitos informados.
+            if ((dig10 == CPF.charAt(9)) && (dig11 == CPF.charAt(10))) {
+                return (true);
+            } else {
+                return (false);
+            }
+        } catch (Exception erro) {
+            return (false);
+        }
     }
 
 }

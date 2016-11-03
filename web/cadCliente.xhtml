@@ -13,9 +13,7 @@
         <center>
             <h:form id="formCadastro" style="width: 920px;text-align: left ">
 
-                <p:dialog  showEffect="pop" hideEffect="pop" header="#{PessoaMB.msg}" id="msgBox" appendTo="@(body)" widgetVar="msgBox" width="40%">
-                    <!--<h:outputText value="#{PessoaMB.msg}"/>-->
-                </p:dialog>
+                
 
                 <p:dialog hideEffect="blind" showEffect="blind" header="PESQUISAR CLIENTE" id="dtPessoa" widgetVar="dtPessoa" draggable="false" width="80%">
 
@@ -55,7 +53,7 @@
 
                             <!-- Clicar em Alterar Pessoa -->
                             <center>
-                                <p:commandButton action="#{PessoaMB.setPessoa(pessoa)}" style="width: 30px;width: 30px" onclick="PF('dtPessoa').hide();" icon="ui-icon-check" update="formCadastro"/>
+                                <p:commandButton action="#{PessoaMB.setPessoa(pessoaDT)}" style="width: 30px;width: 30px" onclick="PF('dtPessoa').hide();" icon="ui-icon-check" update="formCadastro"/>
                             </center>
                         </p:column>
                     </p:dataTable>
@@ -70,10 +68,10 @@
                             <div class="col-lg-12">
 
                                 <!-- Incluir -->
-                                <p:commandButton disabled="#{PessoaMB.habilitarBotaoAlterar}" icon="ui-icon-plus" value="Incluir" oncomplete="PF('msgBox').show();" action="#{PessoaMB.inserirPessoa('C')}" styleClass="btnMenu" update="formCadastro"/>
+                                <p:commandButton disabled="#{PessoaMB.habilitarBotaoAlterar}" icon="ui-icon-plus" value="Incluir"  action="#{PessoaMB.inserirPessoa('C')}" styleClass="btnMenu" update="formCadastro"/>
 
                                 <!-- Alterar -->
-                                <p:commandButton disabled="#{!PessoaMB.habilitarBotaoAlterar}" icon="ui-icon-disk" value="Atualizar" oncomplete="PF('msgBox').show();" action="#{PessoaMB.atualizarPessoa()}" style="margin-left: 1%" styleClass="btnMenu" update="formCadastro"/>
+                                <p:commandButton disabled="#{!PessoaMB.habilitarBotaoAlterar}" icon="ui-icon-disk" value="Atualizar"  action="#{PessoaMB.atualizarPessoa()}" style="margin-left: 1%" styleClass="btnMenu" update="formCadastro"/>
 
                                 <!-- Limpar -->
                                 <p:commandButton icon="ui-icon-document" value="Limpar" style="margin-left: 1%" action="#{PessoaMB.limparTela()}" styleClass="btnMenu" update="formCadastro"/>
@@ -101,7 +99,7 @@
 
                             <div class="col-lg-3">
                                 <h:outputLabel value="RG:" style="display: block" styleClass="fontInput"/>
-                                <p:inputMask placeholder="Ex: 99.999.999-9" value="#{PessoaMB.pessoa.rg}" mask="99.999.999-9" styleClass="fontInput" style="width: 100%"/>
+                                <p:inputText  value="#{PessoaMB.pessoa.rg}" styleClass="fontInput" style="width: 100%"/>
                             </div>
 
                         </div>
@@ -110,7 +108,7 @@
 
                             <div class="col-lg-3" >
                                 <h:outputLabel value="Data Nascimento:" style="display: block;" styleClass="fontInput"/>
-                                <p:calendar mask="99/99/9999" effect="slide" placeholder="Ex: 01/01/1990" value="#{PessoaMB.pessoa.dataNascimento}" locale="pt" pattern="dd/MM/yyyy">
+                                <p:calendar mask="99/99/9999" effect="slide" maxdate="#{PessoaMB.dataNasc}" placeholder="Ex: 01/01/1990" value="#{PessoaMB.pessoa.dataNascimento}" locale="pt" pattern="dd/MM/yyyy">
                                 </p:calendar>
                             </div>
 

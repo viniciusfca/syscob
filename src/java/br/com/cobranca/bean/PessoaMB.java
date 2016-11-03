@@ -26,6 +26,8 @@ public class PessoaMB {
 
     private String tipoConsulta;
     private String valorConsulta;
+    
+    private Date dataNasc;
 
     private boolean habilitarBotaoAlterar;
 
@@ -44,6 +46,8 @@ public class PessoaMB {
 
         pessoa = new Pessoa();
         this.pessoas = new ArrayList<>();
+        
+        dataNasc = new Date();
 
         habilitarBotaoAlterar = false;
 
@@ -55,7 +59,7 @@ public class PessoaMB {
 
         if (pessoa.getNome() == null || pessoa.getNome().isEmpty()) {
             msg = "Nome inválido!";
-        } else if (pessoa.getCpf() == null || pessoa.getCpf().trim().length() < 11) {
+        } else if (pessoa.getCpf() == null || !Util.isCPF(pessoa.getCpf())) {
             msg = "CPF inválido!";
         } else if (pessoa.getRg() == null || pessoa.getRg().trim().length() < 9) {
             msg = "RG inválido!";
@@ -77,7 +81,7 @@ public class PessoaMB {
             msg = "Número de telefone inválido!";
         } else if (pessoa.getCelular() == null || pessoa.getCelular().trim().length() < 10) {
             msg = "Número de celular inválido!";
-        } else if (pessoa.getEmail() == null || !Util.ValidarEmail(pessoa.getEmail())) {
+        } else if (pessoa.getEmail() == null || !Util.isEmailValido(pessoa.getEmail())) {
             msg = "E-mail inválido!";
         } else if (confirmarEmail == null || !confirmarEmail.equals(pessoa.getEmail())) {
             msg = "Confirmação de e-mail inválida!";
@@ -110,9 +114,13 @@ public class PessoaMB {
                     msg = "Alteração não efetuada!";
                 }
             }
+            
+            
         } catch (Exception ex) {
             msg = "Erro ao efetuar a alteração: " + ex.getMessage();
             //Logger.getLogger(PessoaMB.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            Util.mostrarMensagemSucesso("Informação", msg);
         }
     }
 
@@ -137,6 +145,8 @@ public class PessoaMB {
         } catch (Exception ex) {
             msg = "Erro ao efetuar a inclusão: " + ex.getMessage();
             //Logger.getLogger(PessoaMB.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            Util.mostrarMensagemSucesso("Informação", msg);
         }
 
     }
@@ -164,6 +174,9 @@ public class PessoaMB {
 
     public void setPessoa(Pessoa pessoa) {
         this.pessoa = pessoa;
+        pessoas.clear();
+        valorConsulta = "";
+        habilitarBotaoAlterar = true;
     }
 
     public ArrayList<Pessoa> getPessoas() {
@@ -221,5 +234,15 @@ public class PessoaMB {
     public void setConfirmarEmail(String confirmarEmail) {
         this.confirmarEmail = confirmarEmail;
     }
+
+    public Date getDataNasc() {
+        return dataNasc;
+    }
+
+    public void setDataNasc(Date dataNasc) {
+        this.dataNasc = dataNasc;
+    }
+    
+    
 
 }
