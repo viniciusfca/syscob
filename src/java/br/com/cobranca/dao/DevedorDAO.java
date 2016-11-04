@@ -202,4 +202,49 @@ public class DevedorDAO {
          return devedor;
      }
      
+     /**
+      * Metodo que retorna devedor pelo CPF
+      * @param id
+      * @return 
+      */
+     public Devedor getById(int id){
+         Conexao conexao = new Conexao();
+         Devedor devedor = new Devedor();
+         
+         String sql = "SELECT * FROM DEVEDOR WHERE id = '"+id+"'";
+         
+         PreparedStatement ps;
+         
+         try{
+             ps = conexao.conectar().prepareStatement(sql);
+             ResultSet rs = ps.executeQuery();
+             
+             if(rs.next()){
+                 devedor.setId(rs.getInt("id"));
+                 devedor.setNome(rs.getString("nome"));
+                 devedor.setSexo(rs.getString("sexo"));
+                 devedor.setCpf(rs.getString("cpf"));
+                 devedor.setRg(rs.getString("rg"));
+                 devedor.setDataNascimento(rs.getDate("datanascimento"));
+                 devedor.setDataCadastro(rs.getDate("datacadastro"));
+                 devedor.setEmail(rs.getString("email"));
+                 devedor.setTelefone(rs.getString("telefone"));
+                 devedor.setCelular(rs.getString("celular"));
+                 devedor.setEndereco(rs.getString("endereco"));
+                 devedor.setNumero(rs.getString("numero"));
+                 devedor.setBairro(rs.getString("bairro"));
+                 devedor.setComplemento(rs.getString("complemento"));
+                 devedor.setCidade(rs.getString("cidade"));
+                 devedor.setUf(rs.getString("uf"));
+             }
+             
+         }catch(Exception e){
+             System.out.println("Erro: "+ e);
+         }finally{
+             conexao.desconectar();
+         }
+         
+         return devedor;
+     }
+     
 }

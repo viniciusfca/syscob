@@ -24,6 +24,7 @@ public class Divida {
     private String observacao;
     
     private Date dataCadastro;
+    private Date dataCobranca;
 
     public Devedor getDevedor() {
         return devedor;
@@ -84,6 +85,15 @@ public class Divida {
     public void setId(int id) {
         this.id = id;
     }
+
+    public Date getDataCobranca() {
+        return dataCobranca;
+    }
+
+    public void setDataCobranca(Date dataCobranca) {
+        this.dataCobranca = dataCobranca;
+    }
+    
     
     
 }
