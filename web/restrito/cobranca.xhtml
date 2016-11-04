@@ -170,11 +170,6 @@
                         <div style="margin-top: 1%">
                             <p:dataTable style="width: 100%;text-align: center"  value="#{CobrancaMB.historicos}" var="historico" emptyMessage="Não existe divídas para serem cobradas.">
 
-                                <p:column style="color: black; font-weight: bold" headerText="Valor" styleClass="fontInput" >
-                                    <h:outputText value="#{historico.divida.valorDivida}" styleClass="fontInput">
-                                        <f:convertNumber type="currency" />
-                                    </h:outputText>
-                                </p:column>
                                 <p:column style="color: black; font-weight: bold" headerText="Atendente" styleClass="fontInput" >
                                     <h:outputText value="#{historico.pessoa.nome}" styleClass="fontInput"/>
                                 </p:column>

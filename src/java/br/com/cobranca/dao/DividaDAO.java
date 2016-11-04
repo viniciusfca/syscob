@@ -117,7 +117,7 @@ public class DividaDAO {
         DevedorDAO devedorDAO = new DevedorDAO();
         PessoaDAO pessoaDAO = new PessoaDAO();
 
-        String sql = "SELECT * FROM Divida WHERE id = " + id;
+        String sql = "SELECT * FROM Divida WHERE id = " + id +" AND status <> 'Finalizado' ";
 
         PreparedStatement ps = null;
 
@@ -157,12 +157,20 @@ public class DividaDAO {
     public Divida atualizarDivida(Divida divida){
         Conexao conexao = new Conexao();
         PreparedStatement ps = null;
-        String sql = "Update Divida SET status = ? WHERE id = ?";
+        String sql = "Update Divida SET status = ?, datacobranca = ?  WHERE id = ?";
+        
+        Date dataCob = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(dataCob);
+        c.add(Calendar.DATE, +1);
+        dataCob = c.getTime();
+        
         
         try{
             ps = conexao.conectar().prepareStatement(sql);
             ps.setString(1, divida.getStatus());
-            ps.setInt(2, divida.getId());
+            ps.setDate(2, new java.sql.Date(dataCob.getTime()));
+            ps.setInt(3, divida.getId());
             
             ps.execute();
             

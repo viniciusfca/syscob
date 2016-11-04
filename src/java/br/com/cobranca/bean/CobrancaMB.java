@@ -74,6 +74,7 @@ public class CobrancaMB {
         if(retorno > 0){
             Util.mostrarMensagemSucesso("Informação", "Atendimento incluído com sucesso!");
             divida = dividaDAO.atualizarDivida(divida);
+            dividas = dividaDAO.dividasDia();
             historicos = historicoDAO.listarHistorico(divida.getId());
         }else{
             Util.mostrarMensagemErro("Informação", "Falha ao incluir o atendimento!");
